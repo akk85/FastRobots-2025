@@ -238,3 +238,34 @@ a:hover {
   background: var(--background-color);
   z-index: 9999;
 }
+
+/* Add/Update these CSS rules */
+.profile-img-container {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 1.5rem;
+}
+
+.profile-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--surface-color);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Mobile adjustment */
+@media (max-width: 768px) {
+  .profile-img-container {
+    width: 140px;
+    height: 140px;
+  }
+}

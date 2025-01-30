@@ -46,8 +46,14 @@
   <header id="header" class="header dark-background d-flex flex-column">
     <i class="header-toggle d-xl-none bi bi-list"></i>
 
-    <div class="profile-img">
-      <img src="assets/img/hero-bg.jpg" alt="Tony's Profile Picture" class="img-fluid rounded-circle" loading="lazy">
+    <!-- Update the profile section in your HTML -->
+    <div class="profile-img-container">
+      <div class="profile-img">
+        <img src="assets/img/hero-bg.jpg" 
+            alt="Tony's Profile Picture" 
+            class="profile-image"
+            loading="lazy">
+      </div>
     </div>
 
     <a href="index.html" class="logo d-flex align-items-center justify-content-center">
@@ -69,8 +75,8 @@
     <section id="about" class="about section">
       <div class="container section-title" data-aos="fade-up">
         <h2>Bio</h2>
-        <p>Welcome to my website for ECE 4960: Fast Robots. Here, you will find write-ups for each lab and a brief introduction of who I am.</p>
-        <p>My name is Tony Kariuki. I'm an undergraduate senior majoring in Electrical and Computer Engineering and Computer Science, and I'm super stoked about this class. For more about my projects and professional background, please visit my <a href="https://www.tonykariuki.com/" target="_blank" rel="noopener">personal website</a>.</p>
+        <p>Welcome to my website for ECE 4160: Fast Robots. Here, you will find write-ups for each lab and a brief introduction of who I am.</p>
+        <p>My name is Tony Kariuki. I'm an undergraduate senior majoring in Electrical and Computer Engineering with a minor in Computer Science, and I'm super stoked about this class. For more about my projects and professional background, please visit my <a href="https://www.tonykariuki.com/" target="_blank" rel="noopener">personal website</a>.</p>
       </div>
     </section>
 
@@ -281,7 +287,7 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
-  // Replace the existing script with this corrected version
+  
   <script>
   document.addEventListener('DOMContentLoaded', () => {
     const LABS_PER_PAGE = 8;

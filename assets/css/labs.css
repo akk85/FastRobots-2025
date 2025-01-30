@@ -1,0 +1,76 @@
+/* Lab Page Specific Styles */
+.lab-page .lab-content {
+    padding: 4rem 0;
+  }
+  
+  .lab-title {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--heading-color);
+  }
+  
+  .lab-subtitle {
+    font-size: 1.25rem;
+    color: var(--default-color);
+    margin-bottom: 2rem;
+  }
+  
+  .lab-section {
+    margin-bottom: 3rem;
+  }
+  
+  .lab-section h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+    color: var(--heading-color);
+  }
+  
+  .lab-image {
+    margin: 2rem 0;
+  }
+  
+  .image-caption {
+    font-size: 0.9rem;
+    color: #666;
+    text-align: center;
+    margin-top: 0.5rem;
+  }
+  
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  
+  .result-item img {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  
+  pre {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+  }
+  
+  code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .lab-title {
+      font-size: 2rem;
+    }
+    
+    .lab-subtitle {
+      font-size: 1.1rem;
+    }
+    
+    .lab-section h2 {
+      font-size: 1.5rem;
+    }
+  }
