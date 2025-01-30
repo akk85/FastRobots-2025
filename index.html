@@ -281,77 +281,70 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
-  <!-- Search & Pagination Script -->
+  // Replace the existing script with this corrected version
   <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const LABS_PER_PAGE = 8; // Optimized for 4-column layout
+    const LABS_PER_PAGE = 8;
     let currentPage = 1;
     let totalPages = 1;
-    let allLabs = Array.from(document.querySelectorAll('.lab-card'));
-    let searchTimeout;
-
-    // Pagination controls
+    const allLabs = Array.from(document.querySelectorAll('.lab-card'));
+    let filteredLabs = [...allLabs]; // Copy of all labs for filtering
     const pagination = document.getElementById('labPagination');
-
-    function updatePagination() {
+  
+    // Initialize all labs as hidden
+    allLabs.forEach(lab => lab.parentElement.style.display = 'none');
+  
+    function updateDisplay() {
+      // Calculate visible range
+      const startIndex = (currentPage - 1) * LABS_PER_PAGE;
+      const endIndex = startIndex + LABS_PER_PAGE;
+      
+      // Hide all labs first
+      allLabs.forEach(lab => lab.parentElement.style.display = 'none');
+      
+      // Show only current page's labs
+      filteredLabs.slice(startIndex, endIndex).forEach(lab => {
+        lab.parentElement.style.display = 'block';
+      });
+  
+      // Update pagination controls
+      totalPages = Math.ceil(filteredLabs.length / LABS_PER_PAGE);
       document.getElementById('currentPage').textContent = `Page ${currentPage}`;
       document.getElementById('prevPage').parentElement.classList.toggle('disabled', currentPage === 1);
-      document.getElementById('nextPage').parentElement.classList.toggle('disabled', currentPage === totalPages);
+      document.getElementById('nextPage').parentElement.classList.toggle('disabled', currentPage >= totalPages);
       pagination.style.display = totalPages > 1 ? 'block' : 'none';
     }
-
-    // Debounced search
+  
+    // Search functionality
     document.getElementById('labSearch').addEventListener('input', (e) => {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(() => {
-        const term = e.target.value.toLowerCase();
-        allLabs.forEach(lab => {
-          const matches = lab.dataset.search.includes(term);
-          lab.parentElement.style.display = matches ? 'block' : 'none';
-        });
-        currentPage = 1;
-        updateVisibleLabs();
-      }, 300);
+      const term = e.target.value.toLowerCase();
+      filteredLabs = allLabs.filter(lab => 
+        lab.dataset.search.toLowerCase().includes(term)
+      );
+      currentPage = 1;
+      updateDisplay();
     });
-
-    // Pagination navigation
+  
+    // Pagination controls
     document.getElementById('prevPage').addEventListener('click', (e) => {
       e.preventDefault();
       if(currentPage > 1) {
         currentPage--;
-        updateVisibleLabs();
+        updateDisplay();
       }
     });
-
+  
     document.getElementById('nextPage').addEventListener('click', (e) => {
       e.preventDefault();
       if(currentPage < totalPages) {
         currentPage++;
-        updateVisibleLabs();
+        updateDisplay();
       }
     });
-
-    // Core visibility logic
-    function updateVisibleLabs() {
-      const visibleLabs = allLabs.filter(lab => 
-        lab.parentElement.style.display !== 'none'
-      );
-      
-      totalPages = Math.ceil(visibleLabs.length / LABS_PER_PAGE);
-      
-      visibleLabs.forEach((lab, index) => {
-        const pageStart = (currentPage - 1) * LABS_PER_PAGE;
-        const pageEnd = pageStart + LABS_PER_PAGE;
-        lab.parentElement.style.display = (index >= pageStart && index < pageEnd) ? 'block' : 'none';
-      });
-      
-      updatePagination();
-    }
-
-    // Initial setup
-    updateVisibleLabs();
+  
+    // Initial display
+    updateDisplay();
   });
   </script>
-
 </body>
 </html>
