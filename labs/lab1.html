@@ -148,6 +148,31 @@
                 
                     However, this estimation assumes that the board uses all of its memory to store the time and temperature data.
                 </p>
+                <h2>Conclusion</h2>
+                <p>
+                    After testing direct data transmission versus array-based logging on the Artemis board, I noticed some clear trade-offs. 
+                    With direct transmission, I could send one message every 60 milliseconds,  but logging data in an array 
+                    massively sped up collection—so fast that timestamps started repeating due to sampling every ~1 millisecond. This confirmed 
+                    that buffering data in RAM allows much higher sampling rates.
+                </p>
+                
+                <p>
+                    The trade-off, of course, is memory and pushing high rates too long could max out the Artemis’s 384 KB of RAM. For simple, low-frequency tasks, direct transmission 
+                    works fine, but for anything time-sensitive, like high-speed sensor data, buffering in an array is the way to go—despite the memory constraints.
+                </p>
+                
+                <p>
+                    One big issue I ran into was compatibility with macOS Sequoia. For some reason, it messed up communication with the Artemis board, 
+                    and the only fix was rolling my OS back to macOS Sonoma. That instantly solved the problem and let me move forward with the lab, 
+                    which was a solid reminder that software-hardware compatibility is a real thing in embedded systems.
+                </p>
+                
+                <p>
+                    In the end, it’s all about balancing speed and memory. If I need fast data capture, I’d go with array buffering but keep a close 
+                    eye on memory usage to prevent overflows. And beyond just the code, making sure my development setup is stable is just as important 
+                    for smooth testing and debugging.
+                </p>
+                
             </section>
         </article>
     </main>
