@@ -1,212 +1,246 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- Reuse head from main page -->
-  <title>Lab 1: Artemis and Bluetooth | Tony Kariuki's ECE 4160</title>
-  <meta content="Detailed report on Lab 1: Artemis board setup and Bluetooth communication for ECE 4160." name="description">
-  <link href="../assets/css/labs.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 1: The Artemis Board and Bluetooth | Tony Kariuki's ECE 4160</title>
+    <link href="../assets/css/labs.css" rel="stylesheet">
 </head>
-
 <body class="lab-page">
-  <!-- Reuse header from main page -->
-  <header id="header" class="header dark-background">
-    <!-- ... same header content ... -->
-  </header>
+    <header id="header" class="header dark-background">
+        <h1>Lab 1: The Artemis Board and Bluetooth</h1>
+    </header>
 
-  <main class="main">
-    <article class="lab-report">
-      <div class="container">
-        <!-- Lab Title Section -->
-        <header class="lab-header mb-5" data-aos="fade-up">
-          <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-              <li class="breadcrumb-item"><a href="../index.html">Portfolio</a></li>
-              <li class="breadcrumb-item active" aria-current="page">Lab 1</li>
-            </ol>
-          </nav>
-          <h1 class="display-5 fw-bold">Lab 1: Artemis and Bluetooth</h1>
-          <div class="meta d-flex gap-3 mt-3">
-            <span class="badge bg-accent">Hardware Setup</span>
-            <span class="text-muted"><i class="bi bi-clock me-1"></i>Completed: January 15, 2025</span>
-          </div>
-        </header>
+    <main class="main">
+        <article class="lab-report">
+            <section>
+                <h2>Lab Overview</h2>
+                <p>The purpose of this lab was to familiarize myself with working in an environment requiring Bluetooth communication with the device being programmed. 
+                    Bluetooth was used for sending and receiving commands between the Artemis board and my laptop, which acted as the home base.</p>
+            </section>
 
-        <!-- Prelab Section -->
-        <section class="prelab mb-5" data-aos="fade-up">
-          <h2 class="h3 mb-4"><i class="bi bi-gear me-2"></i>Prelab</h2>
-          
-          <!-- Setup -->
-          <div class="card mb-4">
-            <div class="card-body">
-              <h3 class="h4">Setup</h3>
-              <p>To prepare for Lab 1, I installed the necessary software and configured my environment:</p>
-              <ul>
-                <li>Installed Arduino IDE 2.3.2 and added the Artemis Nano board support package.</li>
-                <li>Lab 1: The Artemis Board and Bluetooth
+            <section>
+                <h2>Materials</h2>
+                <ul>
+                    <li>RedBoard Artemis Nano</li>
+                    <li>USB-C to USB-C cable</li>
+                    <li>I ran all the lab sections below primarily on a M1 Macbook pro running the sequoia OS. </li>
+                </ul>
+            </section>
 
-                    Lab Overview
-                    
-                    The purpose of this lab was to familiarize myself with an environment that requires establishing a Bluetooth connection with a device I am programming. Specifically, I used Bluetooth to send and receive commands between the Artemis board and my laptop, which acted as the central hub for communication.
-                    
-                    Materials List
-                    
-                    The following materials were provided in the lab:
-                    
-                    RedBoard Artemis Nano
-                    USB-C to USB-A cable (used to connect the board to my laptop)
-                    I performed all lab tasks on an M1 MacBook Pro running macOS Sequoia.
-                    
-                    Lab 1A: Prelab and Setup
-                    
-                    Objective
-                    
-                    The primary objective of this section was to set up my laptop with a working environment for programming the Artemis board. This involved installing the necessary software, testing board connectivity, and verifying the functionality of onboard sensors.
-                    
-                    Setup Process
-                    
-                    Arduino IDE and Board Manager:
-                    I installed the Arduino IDE and added the SparkFun Apollo3 Board Manager to enable programming for the Artemis board.
-                    I ensured the correct board and port were selected in the Arduino IDE to establish a connection.
-                    Testing Board Connectivity:
-                    To verify that the board was functioning correctly, I ran the following tests:
-                    Blink Test:
-                    I uploaded the Blink example sketch to the Artemis board to confirm that the onboard LED was working. The LED blinked as expected, indicating successful programming.
-                    [Embedded Blink YouTube URL]
-                    Serial Communication Test:
-                    I tested serial communication by uploading the Example4_Serial sketch. Messages sent from the board were successfully displayed on the Arduino serial monitor.
-                    [Embedded Serial Monitor Screenshot]
-                    Temperature Sensor Test:
-                    I used the Example2_analogRead sketch to read data from the onboard temperature sensor. By touching the board, I observed changes in the temperature readings, confirming the sensor's functionality.
-                    [Image of Temperature Sensor Output]
-                    Microphone Test:
-                    I uploaded the Example1_MicrophoneOutput sketch to test the onboard Pulse Density Microphone (PDM). By whistling and speaking near the board, I observed changes in the maximum frequency readings, verifying the microphone's operation.
-                    [Image of Microphone Output]
-                    Lab 1B: Bluetooth Communication
-                    
-                    Objective
-                    
-                    In this section, I configured Bluetooth Low Energy (BLE) communication between the Artemis board and my laptop. This allowed me to send commands and receive data wirelessly, which will be essential for future labs.
-                    
-                    Prelab Setup
-                    
-                    Environment Configuration:
-                    I updated Python and pip on my system to ensure compatibility with the required libraries.
-                    I created a virtual environment named FastRobots_ble to isolate dependencies and installed necessary packages (numpy, bleak, jupyterlab, etc.).
-                    Artemis Board Configuration:
-                    I burned the ble_arduino.ino sketch to the Artemis board and retrieved its MAC address from the serial monitor.
-                    I updated the connections.yaml file with the board's MAC address and generated a unique BLE service UUID to avoid conflicts with other devices.
-                    I ensured the UUIDs in the Arduino sketch matched those in the Python configuration files.
-                    [Image of MAC Address Output]</li>
-              </ul>
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <figure class="figure">
-                    <img src="../img/lab1-setup.jpg" class="figure-img img-fluid rounded" 
-                         alt="Artemis board connected to computer" loading="lazy">
-                    <figcaption class="figure-caption text-center">Initial hardware setup</figcaption>
-                  </figure>
-                </div>
-                <div class="col-md-6">
-                  <pre class="bg-dark text-light p-3 rounded"><code>
-// Example code from first connection
-void setup() {
-  Serial.begin(115200);
-  Serial.println("Artemis Ready");
-}
+            <section>
+                <h2>Lab 1A: Prelab and Setup</h2>
+                <h3>Objective</h3>
+                <p>Configure the computer and Artemis board for BLE communication.</p>
+                <p>In this section the primary objective was to set up my laptop to have a working environment ready for programming the board.</p>
+                <h3>Steps</h3>
+                <ul>
+                    <li>We first setup the Arduino board along with the Sparkfun Apollo3 board manager which allows us to program our Artemis board.</li>
+                    <li>I tested the board connectivity by running a few tests:</li>
+                    <ul>
+                        <li><strong>Blink Test</strong> - Blink an LED onboard the Artemis Nano.</li>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/AL6pkz7OHpg" frameborder="0" allowfullscreen></iframe>
+                        
+                        <li><strong>Serial Communication</strong> - Tested the workings of the serial communication between 
+                            the board and the computer by displaying messages echoed from the board onto the serial monitor.</li>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/7k16ydbr8oI" frameborder="0" allowfullscreen></iframe>
+                        
+                        <li><strong>Temperature Sensor</strong> - Tested the onboard temperature sensor and output was as shown below
+                            (<img src="labs_img/Temperature_Testing.png" alt="Temperature Sensor Output">).</li>
+                        
+                        <li><strong>Microphone</strong> - By whistling and playing music, I manipulated the maximum frequency read by the onboard microphone and received the output as shown below.</li>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/CZpSquIgCD4" frameborder="0" allowfullscreen></iframe>
+                    </ul>
+                </ul>
+                
+            </section>
 
-void loop() {
-  // Empty
-}
-                  </code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
+            <section>
+                <h2>Lab 1B: Bluetooth Communication</h2>
+                <p>In this section of the lab, we configured Bluetooth communication between our artemis board and 
+                laptop which allowed us to send commands and receive data via Bluetooth.</p>
+                
+                <h3>Prelab</h3>
+                <p>Here I primarily set up my environment to talk to the Artemis Nano board . 
+                This entailed a series of steps such as updating python and pip in my system and setting up a virtual environment in my arduino workspace.</p>
 
-          <!-- Codebase Explanation -->
-          <div class="card mb-4">
-            <div class="card-body">
-              <h3 class="h4">Codebase</h3>
-              <p>The provided codebase uses Bluetooth Low Energy (BLE) to establish communication between the Artemis Nano and a Python client. Key components include:</p>
-              <ul>
-                <li><strong>BLE Service:</strong> Handles data transmission using UUIDs.</li>
-                <li><strong>Python Client:</strong> Sends and receives data via Jupyter Notebook.</li>
-              </ul>
-              <div class="alert alert-info">
-                <i class="bi bi-info-circle me-2"></i>
-                UUID: 19B10000-E8F2-537E-4F6C-D104768A1214
-              </div>
-            </div>
-          </div>
-        </section>
+                <h3>MAC Address Retrieval</h3>
+                <p>Retrieved and updated my Jupyter files to reflect the MAC address (<img src="/labs/labs_img/Mac_Address.png" alt="MAC Address">).</p>
 
-        <!-- Lab Tasks Section -->
-        <section class="lab-tasks mb-5" data-aos="fade-up">
-          <h2 class="h3 mb-4"><i class="bi bi-tools me-2"></i>Lab Tasks</h2>
-          
-          <!-- Task 1 -->
-          <div class="card mb-4">
-            <div class="card-body">
-              <h3 class="h4">Task 1: MAC Address</h3>
-              <p>Printed the MAC address of the Artemis board to verify BLE connectivity.</p>
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <figure class="figure">
-                    <img src="../img/lab1-mac-address.png" class="figure-img img-fluid rounded" 
-                         alt="MAC address printed in serial monitor" loading="lazy">
-                    <figcaption class="figure-caption text-center">MAC address output</figcaption>
-                  </figure>
-                </div>
-                <div class="col-md-6">
-                  <pre class="bg-dark text-light p-3 rounded"><code>
-// Code to print MAC address
-void printMacAddress() {
-  Serial.println("MAC: 00:1A:7D:DA:71:13");
-}
-                  </code></pre>
-                </div>
-              </div>
-            </div>
-          </div>
+                <h3>Tasks</h3>
+                <h4>Task 1: ECHO</h4>
+                <p>Here i had to simply send a string from a computer to the artemis board via the echo command. The code was simple as shown below.</p>
+                <img src="/labs/labs_img/python_ECHO.png" alt="Echo Code">
 
-          <!-- Task 2 -->
-          <div class="card mb-4">
-            <div class="card-body">
-              <h3 class="h4">Task 2: Data Transmission</h3>
-              <p>Implemented a simple echo service to test BLE communication.</p>
-              <div class="alert alert-success">
-                <i class="bi bi-check-circle me-2"></i>
-                Successfully transmitted and received data at 2Hz.
-              </div>
-            </div>
-          </div>
-        </section>
+                <p>On the arduino side however, I had to as well grab this string and send it back to the computer. 
+                    It was just string manipulation and extraction as i have shown. </p>
+                <img src="/labs/labs_img/Arduino_ECHO.png" alt="Echo Output">
+                
+                <P>I simply extracted the string received, pre appended the message “Robot Says” to the string and sent it back  to the computer. 
+                    The received message is as shown below.</P>
 
-        <!-- Discussion Section -->
-        <section class="discussion" data-aos="fade-up">
-          <div class="card border-accent">
-            <div class="card-body">
-              <h2 class="h3 mb-4"><i class="bi bi-chat-dots me-2"></i>Discussion</h2>
-              <p>This lab provided a solid foundation for working with the Artemis Nano and BLE. Key takeaways include:</p>
-              <ul>
-                <li>Understanding BLE communication protocols.</li>
-                <li>Setting up the Artemis Nano for future sensor integration.</li>
-              </ul>
-              <div class="alert alert-warning">
-                <i class="bi bi-lightbulb me-2"></i>
-                <strong>Challenge:</strong> Initial connection issues were resolved by ensuring the correct UUID was used.
-              </div>
-            </div>
-          </div>
-        </section>
+                <img src="/labs/labs_img/Arduino_ECHO_Output.png" alt="Echo Output">
 
-      </div>
-    </article>
-  </main>
 
-  <!-- Reuse footer from main page -->
-  <footer id="footer" class="footer light-background">
-    <!-- ... same footer content ... -->
-  </footer>
+                <h4>Task 2: SEND_THREE_FLOATS</h4>
+                <p>Here, the job was to send three floats values to the board and have the board display the values on its serial monitor. 
+                    I basically extracted the three float values separated by a delimiter and printed them as show below.</p>
+                <img src="/labs/labs_img/Arduino_three_floats.png" alt="Three Floats Code">
+                <p>The program then prints the extracted floats as shown below </p>
+                <img src="/labs/labs_img/Arduino_three_floats_output.png" alt="Three Floats Code">
+    
+
+
+                <h4>Task 3: GET_TIME_MILLIS</h4>
+                <p>I implemented a GET_TIME_MILLIS command that would in the future help me debug by providing the current time tracked by the board in milliseconds. </p>
+                <img src="/labs/labs_img/Arduino_get_milli.png" alt="Time Millis Code">
+
+                <p>As shown in the arduino c code above, I created a temporary buffer that stored the string of the current time in milliseconds.
+                     My computer then receives this data via bluetooth  and renders it as shown below.</p>
+                <img src="/labs/labs_img/Python_get_milli.png" alt="Laptop Time Output">
+
+
+
+                <h4>Task 4: NOTIFICATION HANDLER</h4>
+                <p>I implemented a notification handler whose primary job would be to alow me pass an argument to the start_notify() methods. 
+                    Below is the simplified code for the job handler </p>
+                <img src="/labs/labs_img/Notif_Handler.png" alt="Job Handler Code">
+
+
+                <h4>Task 5: GET_TIME</h4>
+                <p>I included a  time loop command that would essentially acquire an individual time value from the arduino and send it back to the computer. 
+                    The logic was the same as that of the GET_TIME_MILLIS command </p>
+
+                <img src="/labs/labs_img/arduino_loop.png" alt="Time Loop Code">
+                <p>we can see the effective data transfer rate is: <span><em>calculated value</em></span></p>
+
+
+                <h4>Task 6: TIME ARRAY</h4>
+                <p>Next was figuring a way to collect and send the time data. I used an array of size 500 to collect all of the time
+                     data and transmit this at once instead of collecting and then transmittign each data time all over. </p>
+
+                <p>I used the same for loop structure for sending the array data.</p>
+                <img src="/labs/labs_img/time_array.png" alt="Time Array Code">
+
+                <h4>Task 7: GET_TEMP_READINGS</h4>
+                <p>This was a combination of the the TIME_LOOP and SEND_TIME_DATA  as well as Analog Read that I initially worked with in the beginning of the prelab.</p>
+                <img src="/labs/labs_img/Arduino_Time_temp.png" alt="Arduino Temp Code">
+                <img src="/labs/labs_img/python_time_temp.png" alt="Python Temp Code">
+
+                <h4>Task 8: Discussion of the Two Methods</h4>
+                <p>
+                    In Task 5, we transmit individual data points, while in Task 6, we transmit the entirety of the whole sample group.
+                    The Task 6 method definitely has a higher sampling rate than Task 5 because we use two data arrays, which we populate before transmitting.
+                    In contrast, for Task 5, we transmit the time data as individual points.
+                </p>
+                <p>
+                    However, the method in Task 6 might require additional memory due to the size of the two arrays used to store the time and temperature data.
+                </p>
+                <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+                <p>Assuming each sample is approximately 4 bytes, we can estimate the sample size for method 6 to be around 96,000 samples:</p>
+                
+                <p>
+                  \[
+                  \frac{384 \text{kb}}{4 \text{B}} = 96,000
+                  \]
+                </p>
+                
+                    However, this estimation assumes that the board uses all of its memory to store the time and temperature data.
+                </p>
+            </section>
+        </article>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Tony Kariuki | ECE 4160</p>
+    </footer>
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Preloader -->
+  <div id="preloader"></div>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/typed.js/typed.umd.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const LABS_PER_PAGE = 8;
+    let currentPage = 1;
+    let totalPages = 1;
+    const allLabs = Array.from(document.querySelectorAll('.lab-card'));
+    let filteredLabs = [...allLabs]; // Copy of all labs for filtering
+    const pagination = document.getElementById('labPagination');
+  
+    // Initialize all labs as hidden
+    allLabs.forEach(lab => lab.parentElement.style.display = 'none');
+  
+    function updateDisplay() {
+      // Calculate visible range
+      const startIndex = (currentPage - 1) * LABS_PER_PAGE;
+      const endIndex = startIndex + LABS_PER_PAGE;
+      
+      // Hide all labs first
+      allLabs.forEach(lab => lab.parentElement.style.display = 'none');
+      
+      // Show only current page's labs
+      filteredLabs.slice(startIndex, endIndex).forEach(lab => {
+        lab.parentElement.style.display = 'block';
+      });
+  
+      // Update pagination controls
+      totalPages = Math.ceil(filteredLabs.length / LABS_PER_PAGE);
+      document.getElementById('currentPage').textContent = `Page ${currentPage}`;
+      document.getElementById('prevPage').parentElement.classList.toggle('disabled', currentPage === 1);
+      document.getElementById('nextPage').parentElement.classList.toggle('disabled', currentPage >= totalPages);
+      pagination.style.display = totalPages > 1 ? 'block' : 'none';
+    }
+  
+    // Search functionality
+    document.getElementById('labSearch').addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase();
+      filteredLabs = allLabs.filter(lab => 
+        lab.dataset.search.toLowerCase().includes(term)
+      );
+      currentPage = 1;
+      updateDisplay();
+    });
+  
+    // Pagination controls
+    document.getElementById('prevPage').addEventListener('click', (e) => {
+      e.preventDefault();
+      if(currentPage > 1) {
+        currentPage--;
+        updateDisplay();
+      }
+    });
+  
+    document.getElementById('nextPage').addEventListener('click', (e) => {
+      e.preventDefault();
+      if(currentPage < totalPages) {
+        currentPage++;
+        updateDisplay();
+      }
+    });
+  
+    // Initial display
+    updateDisplay();
+  });
+  </script>
 </body>
 </html>

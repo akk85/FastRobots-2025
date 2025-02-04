@@ -1,83 +1,135 @@
-/* Lab Page Specific Styles */
-.lab-page .lab-header {
-  padding: 2rem 0;
-  border-bottom: 2px solid rgba(20, 157, 221, 0.1);
-}
+<style>
+    /* General Styles */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+    }
 
-.lab-page .breadcrumb {
-  background: transparent;
-  padding: 0.5rem 0;
-  margin-bottom: 1rem;
-}
+    /* Header */
+    .header {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 20px 0;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-.lab-page .breadcrumb-item a {
-  color: var(--accent-color);
-  text-decoration: none;
-}
+    .header h1 {
+        margin: 0;
+        font-size: 2.5rem;
+    }
 
-.lab-page .breadcrumb-item.active {
-  color: var(--default-color);
-}
+    /* Main Content */
+    .main { 
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
 
-/* Cards */
-.lab-page .card {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  margin-bottom: 1.5rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+    .lab-report {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-.lab-page .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
+    .lab-report section {
+        margin-bottom: 30px;
+    }
 
-.lab-page .card-body {
-  padding: 1.5rem;
-}
+    .lab-report h2 {
+        color: #2c3e50;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+        font-size: 2rem;
+    }
 
-/* Alerts */
-.lab-page .alert {
-  border-left: 4px solid;
-  padding: 1rem;
-  margin-bottom: 1rem;
-}
+    .lab-report h3 {
+        color: #34495e;
+        margin-top: 20px;
+        font-size: 1.5rem;
+    }
 
-.lab-page .alert-info {
-  border-color: var(--accent-color);
-  background: rgba(20, 157, 221, 0.05);
-}
+    .lab-report p, .lab-report li {
+        font-size: 1.1rem;
+        color: #555;
+    }
 
-.lab-page .alert-success {
-  border-color: #28a745;
-  background: rgba(40, 167, 69, 0.05);
-}
+    .lab-report ul {
+        list-style-type: disc;
+        padding-left: 20px;
+    }
 
-.lab-page .alert-warning {
-  border-color: #ffc107;
-  background: rgba(255, 193, 7, 0.05);
-}
+    .lab-report ul ul {
+        list-style-type: circle;
+    }
 
-/* Code Blocks */
-.lab-page pre {
-  background: #f8f9fa;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  overflow-x: auto;
-}
+    /* Images and Videos */
+    img, iframe {
+        max-width: 80%; /* Limits image and iframe width to 80% of the container */
+        height: auto; /* Maintains aspect ratio */
+        display: block;
+        margin: 10px auto; /* Centers images and iframes */
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
 
-.lab-page code {
-  font-family: "Fira Code", monospace;
-  font-size: 0.85rem;
-  color: #d63384;
-}
+    iframe {
+        height: 400px;
+        border: none;
+    }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-  .lab-page .display-5 {
-    font-size: 2rem;
-  }
+    /* Code Blocks */
+    pre {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 15px;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin: 10px 0;
+    }
 
-  .lab-page .card {
-    margin-bottom: 1rem;
-  }
-}
+    code {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 1rem;
+    }
+
+    /* Footer */
+    footer {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        text-align: center;
+        padding: 15px 0;
+        margin-top: 30px;
+        box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    footer p {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .header h1 {
+            font-size: 2rem;
+        }
+
+        .lab-report h2 {
+            font-size: 1.75rem;
+        }
+
+        .lab-report h3 {
+            font-size: 1.25rem;
+        }
+
+        iframe {
+            height: 250px;
+        }
+    }
+</style>
