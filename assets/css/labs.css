@@ -1,76 +1,83 @@
 /* Lab Page Specific Styles */
-.lab-page .lab-content {
-    padding: 4rem 0;
+.lab-page .lab-header {
+  padding: 2rem 0;
+  border-bottom: 2px solid rgba(20, 157, 221, 0.1);
+}
+
+.lab-page .breadcrumb {
+  background: transparent;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+}
+
+.lab-page .breadcrumb-item a {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.lab-page .breadcrumb-item.active {
+  color: var(--default-color);
+}
+
+/* Cards */
+.lab-page .card {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.lab-page .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.lab-page .card-body {
+  padding: 1.5rem;
+}
+
+/* Alerts */
+.lab-page .alert {
+  border-left: 4px solid;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.lab-page .alert-info {
+  border-color: var(--accent-color);
+  background: rgba(20, 157, 221, 0.05);
+}
+
+.lab-page .alert-success {
+  border-color: #28a745;
+  background: rgba(40, 167, 69, 0.05);
+}
+
+.lab-page .alert-warning {
+  border-color: #ffc107;
+  background: rgba(255, 193, 7, 0.05);
+}
+
+/* Code Blocks */
+.lab-page pre {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.lab-page code {
+  font-family: "Fira Code", monospace;
+  font-size: 0.85rem;
+  color: #d63384;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .lab-page .display-5 {
+    font-size: 2rem;
   }
-  
-  .lab-title {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-    color: var(--heading-color);
+
+  .lab-page .card {
+    margin-bottom: 1rem;
   }
-  
-  .lab-subtitle {
-    font-size: 1.25rem;
-    color: var(--default-color);
-    margin-bottom: 2rem;
-  }
-  
-  .lab-section {
-    margin-bottom: 3rem;
-  }
-  
-  .lab-section h2 {
-    font-size: 1.75rem;
-    margin-bottom: 1.5rem;
-    color: var(--heading-color);
-  }
-  
-  .lab-image {
-    margin: 2rem 0;
-  }
-  
-  .image-caption {
-    font-size: 0.9rem;
-    color: #666;
-    text-align: center;
-    margin-top: 0.5rem;
-  }
-  
-  .results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-top: 1.5rem;
-  }
-  
-  .result-item img {
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  }
-  
-  pre {
-    background: #f8f9fa;
-    padding: 1rem;
-    border-radius: 8px;
-    margin: 1.5rem 0;
-  }
-  
-  code {
-    font-family: 'Courier New', monospace;
-    font-size: 0.9rem;
-  }
-  
-  /* Responsive Adjustments */
-  @media (max-width: 768px) {
-    .lab-title {
-      font-size: 2rem;
-    }
-    
-    .lab-subtitle {
-      font-size: 1.1rem;
-    }
-    
-    .lab-section h2 {
-      font-size: 1.5rem;
-    }
-  }
+}
