@@ -46,7 +46,7 @@
                         <iframe width="560" height="315" src="https://www.youtube.com/embed/7k16ydbr8oI" frameborder="0" allowfullscreen></iframe>
                         
                         <li><strong>Temperature Sensor</strong> - Tested the onboard temperature sensor and output was as shown below
-                            (<img src="labs_img/Temperature_Testing.png" alt="Temperature Sensor Output">).</li>
+                            (<img src="labs_img/Temperature_Testing1.png" alt="Temperature Sensor Output">).</li>
                         
                         <li><strong>Microphone</strong> - By whistling and playing music, I manipulated the maximum frequency read by the onboard microphone and received the output as shown below.</li>
                         <iframe width="560" height="315" src="https://www.youtube.com/embed/CZpSquIgCD4" frameborder="0" allowfullscreen></iframe>
@@ -65,53 +65,53 @@
                 This entailed a series of steps such as updating python and pip in my system and setting up a virtual environment in my arduino workspace.</p>
 
                 <h3>MAC Address Retrieval</h3>
-                <p>Retrieved and updated my Jupyter files to reflect the MAC address (<img src="/labs/labs_img/Mac_Address.png" alt="MAC Address">).</p>
+                <p>Retrieved and updated my Jupyter files to reflect the MAC address (<img src="/labs/labs_img/Mac_Address1.png" alt="MAC Address">).</p>
 
                 <h3>Tasks</h3>
                 <h4>Task 1: ECHO</h4>
                 <p>Here i had to simply send a string from a computer to the artemis board via the echo command. The code was simple as shown below.</p>
-                <img src="/labs/labs_img/python_ECHO.png" alt="Echo Code">
+                <img src="/labs/labs_img/python_ECHO1.png" alt="Echo Code">
 
                 <p>On the arduino side however, I had to as well grab this string and send it back to the computer. 
                     It was just string manipulation and extraction as i have shown. </p>
-                <img src="/labs/labs_img/Arduino_ECHO.png" alt="Echo Output">
+                <img src="/labs/labs_img/Arduino_ECHO1.png" alt="Echo Output">
                 
                 <P>I simply extracted the string received, pre appended the message “Robot Says” to the string and sent it back  to the computer. 
                     The received message is as shown below.</P>
 
-                <img src="/labs/labs_img/Arduino_ECHO_Output.png" alt="Echo Output">
+                <img src="/labs/labs_img/Arduino_ECHO_Output1.png" alt="Echo Output">
 
 
                 <h4>Task 2: SEND_THREE_FLOATS</h4>
                 <p>Here, the job was to send three floats values to the board and have the board display the values on its serial monitor. 
                     I basically extracted the three float values separated by a delimiter and printed them as show below.</p>
-                <img src="/labs/labs_img/Arduino_three_floats.png" alt="Three Floats Code">
+                <img src="/labs/labs_img/Arduino_three_floats1.png" alt="Three Floats Code">
                 <p>The program then prints the extracted floats as shown below </p>
-                <img src="/labs/labs_img/Arduino_three_floats_output.png" alt="Three Floats Code">
+                <img src="/labs/labs_img/Arduino_three_floats_output1.png" alt="Three Floats Code">
     
 
 
                 <h4>Task 3: GET_TIME_MILLIS</h4>
                 <p>I implemented a GET_TIME_MILLIS command that would in the future help me debug by providing the current time tracked by the board in milliseconds. </p>
-                <img src="/labs/labs_img/Arduino_get_milli.png" alt="Time Millis Code">
+                <img src="/labs/labs_img/Arduino_get_milli1.png" alt="Time Millis Code">
 
                 <p>As shown in the arduino c code above, I created a temporary buffer that stored the string of the current time in milliseconds.
                      My computer then receives this data via bluetooth  and renders it as shown below.</p>
-                <img src="/labs/labs_img/Python_get_milli.png" alt="Laptop Time Output">
+                <img src="/labs/labs_img/Python_get_milli1.png" alt="Laptop Time Output">
 
 
 
                 <h4>Task 4: NOTIFICATION HANDLER</h4>
                 <p>I implemented a notification handler whose primary job would be to alow me pass an argument to the start_notify() methods. 
                     Below is the simplified code for the job handler </p>
-                <img src="/labs/labs_img/Notif_Handler.png" alt="Job Handler Code">
+                <img src="/labs/labs_img/Notif_Handler1.png" alt="Job Handler Code">
 
 
                 <h4>Task 5: GET_TIME</h4>
                 <p>I included a  time loop command that would essentially acquire an individual time value from the arduino and send it back to the computer. 
                     The logic was the same as that of the GET_TIME_MILLIS command </p>
 
-                <img src="/labs/labs_img/arduino_loop.png" alt="Time Loop Code">
+                <img src="/labs/labs_img/arduino_loop1.png" alt="Time Loop Code">
                 <p>we can see the effective data transfer rate is: <span><em>calculated value</em></span></p>
 
 
@@ -120,12 +120,12 @@
                      data and transmit this at once instead of collecting and then transmittign each data time all over. </p>
 
                 <p>I used the same for loop structure for sending the array data.</p>
-                <img src="/labs/labs_img/time_array.png" alt="Time Array Code">
+                <img src="/labs/labs_img/time_array1.png" alt="Time Array Code">
 
                 <h4>Task 7: GET_TEMP_READINGS</h4>
                 <p>This was a combination of the the TIME_LOOP and SEND_TIME_DATA  as well as Analog Read that I initially worked with in the beginning of the prelab.</p>
-                <img src="/labs/labs_img/Arduino_Time_temp.png" alt="Arduino Temp Code">
-                <img src="/labs/labs_img/python_time_temp.png" alt="Python Temp Code">
+                <img src="/labs/labs_img/Arduino_Time_temp1.png" alt="Arduino Temp Code">
+                <img src="/labs/labs_img/python_time_temp1.png" alt="Python Temp Code">
 
                 <h4>Task 8: Discussion of the Two Methods</h4>
                 <p>
