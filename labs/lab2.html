@@ -1,12 +1,365 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 2 Placeholder</title>
+    <title>Lab Report: IMU Setup and Data Analysis</title>
+        <!-- Dark Theme Styling -->
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                background-color: #181818;
+                color: #f4f4f4;
+                line-height: 1.6;
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+            h1, h2, h3 {
+                color: #e8b827eb;
+                border-bottom: 2px solid #444;
+                padding-bottom: 5px;
+            }
+            a {
+                color: #3498db;
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 20px 0;
+                background: #222;
+            }
+            th, td {
+                border: 1px solid #555;
+                padding: 10px;
+                text-align: left;
+            }
+            img {
+                display: block;
+                margin: 20px auto;
+                max-width: 100%;
+                border-radius: 5px;
+            }
+            pre {
+                background: #222;
+                padding: 15px;
+                border-radius: 5px;
+                overflow-x: auto;
+                font-size: 14px;
+            }
+            code {
+                font-family: 'Courier New', monospace;
+                background: #333;
+                padding: 3px 6px;
+                border-radius: 4px;
+                color: #f1c40f;
+            }
+            .equation {
+                text-align: center;
+                margin: 20px 0;
+                font-size: 1.2em;
+            }
+            iframe {
+                display: block;
+                margin: 20px auto;
+                border-radius: 8px;
+                width: 80%;
+            }
+            
+        </style>
+
 </head>
 <body>
-    <h1>Lab 2: This is a Placeholder</h1>
-    <p>This is a placeholder for Lab 2 content.</p>
+    <h1>Lab Report: IMU Setup and Data Analysis</h1>
+    <p><strong>Author:</strong> Tony Kariuki<br>
+    <strong>Date:</strong> February 10, 2025</p>
+
+    <h2>1. Lab Tasks Overview</h2>
+    <p>This lab focused on setting up and testing the ICM-20948 IMU on the Artemis board.Here i played around and tested the internal workings on the 
+        IMU's Accelerometer and Gyroscope.</p>
+    <hr>
+
+    <h2>2. IMU Setup</h2>
+    <h3>Lab components provided in the lAB </h3>
+    <table>
+        <tr><td>SparkFun RedBoard Artemis Nano</td></tr>
+        <tr><td>USB-C cable</td></tr>
+        <tr><td>9DOF IMU sensor</td></tr>
+        <tr><td> Force1 RC car</td></tr>
+        <tr><td>Li-Ion 3.7V 850mAh battery</td></tr>
+    </table>
+    <p><strong>Image: IMU Connections</strong><br>
+    <img src="labs_img/IMG_3422.png" alt="IMU Connection Diagram" width="400" ></p>
+    <h3>AD0_VAL Definition</h3>
+    <ul>
+        <li>AD0_VAL = 1 (Default, I2C Address: 0x69)</li>
+        <li>AD0_VAL = 0 (When ADR jumper is closed, I2C Address: 0x68)</li>
+    </ul>
+    <p>
+        I tested the IMU by running SparkFun's example sketch 
+        <code>Examples &gt; ICM 20948 &gt; Arduino &gt; Example1_Basics</code>, 
+        which outputs accelerometer, gyroscope, and magnetometer data to the serial monitor. 
+        The <code>AD0_VAL</code> macro, defined at the top of the sketch, sets the last bit of 
+        the IMU's I2C address. I set it to <code>0</code> since the ADDR jumper on the Pimoroni board is closed.
+    </p>
+    
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/f9sflHeNXxk" frameborder="0" allowfullscreen></iframe>
+    </p>
+    <p>
+        The accelerometer measures acceleration relative to gravity, while the gyroscope tracks angular velocity, detecting 
+        changes in angle over time from its initial "zero" state at startup. To obtain angular displacement from the gyroscope, 
+        its readings must be integrated over time.
+    </p>
+    <p> 
+        <iframe width="560" height="315" src="https://youtube.com/embed/qnUh3TvLHXY" frameborder="0" allowfullscreen></iframe>
+    </p>
+    <h2>3. Accelerometer Data Analysis</h2>
+    <p>
+        To measure the pitch and roll angles using the accelerometer data, I used the following equations form lecture :
+
+        <div class="equation">
+            \(\theta_{\text{pitch}} = \arctan \left(\frac{a_y}{a_z}\right) \times \frac{180}{\pi}\)
+        </div>
+        <div class="equation">
+            \(\theta_{\text{roll}} = \arctan \left(\frac{a_x}{a_z}\right) \times \frac{180}{\pi}\)
+        </div>
+
+        These equations calculate the pitch and roll angles in degrees based on the accelerometer readings along the x, y, and z axes.
+    </p>
+    <pre><code>
+        accel_pitch = atan2(myICM.accY(), myICM.accZ()) * 180.0 / M_PI;
+        accel_roll  = atan2(myICM.accX(), myICM.accZ()) * 180.0 / M_PI;
+    </code></pre>
+
+    <p>
+        To test the IMU calibration , I oriented the IMU at various angles to induce angles of -90, 0 and 90 degress to measure
+        pitch and roll at this angles. The accelremoter pitch and data values received were off by a couple of 
+        degrees hence a need for a two point calibration.
+    </p>
+    <h3>
+        Two point calibration
+    </h3>
+    <p>
+        To calibrate the accelerometer data, I measured the output of the accelemoter at both -90, 0 and 90
+        and found the offset of this data to match the desired output.
+        <pre><code> pitch_values = incoming_pitch_data 
+ pitch_offset = -np.mean(pitch_values) </code></pre>
+            My pitch offset was found to be 0.9476842105263155 and roll offset 0.16389473684210526 . Inorder to account fot this offset I made sure to include it in all 
+            measurement of the accelemoter pitch and roll.
+    </p>
+    <pre><code>    float pitch_offset = 0.9476842105263155;
+    float roll_offset  = 0.16389473684210526;
+        
+    void calculatePitchRoll(float ax, float ay, float az) 
+        pitch = atan2(ay, az) * 180.0 / M_PI + pitch_offset;
+        roll  = atan2(ax, az) * 180.0 / M_PI + roll_offset; </code></pre>
+    <P>
+        Shown below are the plots of pitch and roll at these various angles after the two point calibration. The highlighted regions
+        indiicate times when the IMU was pressed flush on 0 and (-90 , 90) degrees on my desk. The noise seen here is me changing the 
+        IMU orientation from angle to angle.
+    </P>
+        <img src="labs_img/pitch_data_calibrated.png" alt="Image of pitch data after calibration" width="600">
+        <img src="labs_img/roll_data_calibrated.png" alt="Image of roll data after calibration" width="600">
+    </p>
+<!-- Code block -->
+<pre><code class="language-cpp"> accel_pitch = atan2(myICM.accY(), myICM.accZ()) * 180.0 / M_PI;
+ accel_roll  = atan2(myICM.accX(), myICM.accZ()) * 180.0 / M_PI; </code></pre>
+
+    <P>
+        To mitigate noise in the accelerometer data, i recorded periodic imu tilts, transmitted the data via bluetooth, 
+        and applied fourier spectrum analysis using scipy's fft() to detect periodic components in the signal. Given my 
+        sampling period of 0.1064 sec, i determined a safe low-pass filter cutoff at 1.5 hz based on the frequency spectrum. 
+        
+    </P>
+    </P>
+    <img src="labs_img/fft_static.png" alt="Image of pitch data fft" width="600">
+
+    </p>
+    <p>
+        <h2>Calculation of Alpha for Low-Pass Filter</h2>
+
+$$
+T = \frac{120}{1128} = 0.1064 \text{ sec}
+$$
+
+$$
+\alpha = \frac{1}{1 + (2\pi f_c T)}
+$$
+
+$$
+\alpha = \frac{1}{1 + (2\pi \times 1.5 \times 0.1064)}
+$$
+
+$$
+\alpha = \frac{1}{1 + (6.2832 \times 0.1064)}
+$$
+
+$$
+\alpha = \frac{1}{1 + 0.6685}
+$$
+
+$$
+\alpha = \frac{1}{1.6685}
+$$
+
+$$
+\alpha \approx 0.60
+$$
+    </p>
+    <p>Using my sample period of 0.1064 s and a chosen cut-off frequency of 1.5Hz, I calculated my \(\alpha\) to be roughly 0.60.</p>
+
+
+
+<p> I implemented a low pass filter using the equation provided in class. 
+    The low pass filter cuts down on the high frequency noise in the acclerometer data.
+    <img src="labs_img/low_pass.png"  alt="Image of low pass filter data" width="400">
+</p>
+
+
+
+
+    <h2>4. Gyroscope Data Analysis</h2>
+    <p>
+        For pitch, roll and taw from the gyroscope, I used and implemented the equations from class to measure the gyroscope data over time
+    </p>
+    <pre><code> float dt = (millis() - lastT) / 1000.;
+ lastT = millis();
+ gyro_pitch_raw[i] += myICM.gyrY() * dt;
+ gyro_roll_raw[i]  += myICM.gyrX() * dt;
+ gyro_yaw_raw[i]   += myICM.gyrZ() * dt;</code></pre>
+
+ <p>
+    Just as I did with the acclerometer, i measured the groscope data across the three degrees to induce pitch and roll. The measured was 
+    very noise and as seen from the collected data, the gyroscope drifts over time.
+    <img src="labs_img/Gyro_Pitch.png"  alt="Image of gyroscope pitch" width="500">
+    <img src="labs_img/Gyro_Roll.png"  alt="Image of gyroscope roll" width="500">
+    <img src="labs_img/Gyro_Yaw.png"  alt="Image of gyroscope yaw" width="500">
+ </p>
+
+
+<h2>
+    Complementary Filter
+</h2>
+<p>
+    When measuring gyroscope data, I observed noticeable drift over extended data collection periods. While it was less noisy than the accelerometer, it was also less accurate over time. To compensate, I implemented a complementary filter that combines both sensor readings. Based on my FFT analysis, I applied a low-pass filter to the accelerometer data with a 5 Hz cutoff frequency and weighted the gyroscope data more heavily in the fusion process. 
+</p>
+
+<p>
+    After tuning, I found that an alpha value of \( \alpha = 0.60 \) produced the most stable results. The filter performed reliably within the \(-90^\circ\) to \(90^\circ\) range, but beyond this, the accelerometer's behavior became less predictable. Yaw was left unfiltered since the accelerometer cannot measure it—an interesting limitation given that yaw will be the most relevant parameter in future applications. 
+</p>
+
+<p>
+    Below are the results of my complementary filter, with pitch and roll shown.
+</p>
+
+<!-- Example for including images -->
+<img src="labs_img/complemenatry_filter.png" alt="Pitch and Roll Filter Result" width="400">
+
+    <h2>5. Sample Data Collection</h2>
+    <p>
+        To maximize the speed of data collection, I optimized my code by removing unnecessary delays, debug print statements, and redundant operations. 
+        This included eliminating <code>Serial.println()</code> calls between key steps in data collection and Bluetooth transmission that were initially used for debugging. 
+        Additionally, I stored all IMU data in pre-allocated arrays to minimize memory fragmentation and ensure efficient access. 
+        The complete implementation can be seen below.
+    </p>
+    <p>
+     I adjusted the main loop to collect IMU data only when it was available and when the global <code>IMU_DATA_READY</code> flag was active.
+    </p>
+    
+    <pre><code>
+    while (central()) {
+        // Store IMU data ready only when available and recording is enabled
+        if (IMU_DATA_READY && myICM.dataReady()) {
+            compute_complementary_filter();
+        }
+    }
+    </code></pre>
+    
+    <p>
+        The <code>compute_complementary_filter()</code> function processes raw IMU data, applying a complementary filter to refine pitch and roll calculations. 
+        The <code>IMU_DATA_READY</code> flag is managed through BLE commands, eliminating the need for manual data collection.
+    </p>
+    
+    <pre><code>
+    // Inside handle_command():
+    case START_IMU_DATA:
+        Serial.println("Starting IMU recording...");
+        digitalWrite(LED_BUILTIN, HIGH);
+        IMU_DATA_READY = true;
+        break;
+    
+    case STOP_IMU_DATA:
+        Serial.println("IMU recording stopped.");
+        digitalWrite(LED_BUILTIN, LOW);
+        IMU_DATA_READY = false;
+        break;
+    </code></pre>
+    
+    <p>
+        I then integrated BLE commands into a Python script to initiate and terminate data collection remotely using <code>START_IMU_DATA</code> and <code>STOP_IMU_DATA</code>, 
+        allowing for real-time data logging without modifying the Arduino code manually.
+    </p>
+      
+
+    <h3>IMU Data Over Bluetooth</h3>
+    <pre><code># Start BLE notifications
+ble.start_notify(ble.uuid['RX_STRING'], imu_notification_handler)
+ble.send_command(CMD.START_IMU_DATA, "")
+time.sleep(5)
+ble.send_command(CMD.STOP_IMU_DATA, "")</code></pre>
+    <h2>
+        Stunt Video
+    </h2>
+    <p>
+        The last task was to record a stunt video playing around with the RC car. Overall, I felt it was a really fast car in need of additional tuning.
+        Preety excited to work on this robot car.
+        <iframe width="560" height="315" src="https://youtube.com/embed/6gD3eocuHSk" frameborder="0" allowfullscreen></iframe>
+    </p>
+    <h2>Conclusion</h2>
+    <p>
+        This lab provided hands-on experience with a real-world sensor and the challenges that come with it. 
+        I'm looking forward to testing my IMU recording system on the RC car once we integrate the Artemis module.
+    </p>
+    <script>
+        function toggleTheme() {
+            let body = document.body;
+            body.classList.toggle("light-mode");
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener("scroll", function() {
+            let backToTop = document.querySelector(".back-to-top");
+            if (window.scrollY > 200) {
+                backToTop.style.display = "block";
+            } else {
+                backToTop.style.display = "none";
+            }
+        });
+
+        let coll = document.querySelectorAll(".collapsible");
+        coll.forEach(btn => {
+            btn.addEventListener("click", function() {
+                this.classList.toggle("active");
+                let content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        });
+    </script>
 </body>
 </html>
