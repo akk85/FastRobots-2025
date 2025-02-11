@@ -5,6 +5,164 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lab 1: The Artemis Board and Bluetooth | Tony Kariuki's ECE 4160</title>
     <link href="../assets/css/labs.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #121212; /* Dark background */
+    color: #e0e0e0; /* Light text for contrast */
+}
+
+/* Header */
+.header {
+    background-color: #1e1e1e; /* Deep dark for header */
+    color: #8f6da5; /* Gold text for contrast */
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(255, 255, 255, 0.1);
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+/* Main Content */
+.main { 
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.lab-report {
+    background-color: #1a1a1a; /* Darker section background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+.lab-report section {
+    margin-bottom: 30px;
+}
+
+.lab-report h2 {
+    color: #5b707f; /* Gold headings */
+    border-bottom: 2px solid #e67e22; /* Orange highlight */
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+
+.lab-report h3 {
+    color: #a49366; /* Slightly lighter gold for subheadings */
+    margin-top: 20px;
+    font-size: 1.5rem;
+}
+
+.lab-report p, .lab-report li {
+    font-size: 1.1rem;
+    color: #bdbdbd; /* Light gray text */
+}
+
+.lab-report ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.lab-report ul ul {
+    list-style-type: circle;
+}
+
+/* Images and Videos */
+img, iframe {
+    max-width: 80%; /* Limits image and iframe width to 80% of the container */
+    height: auto; /* Maintains aspect ratio */
+    display: block;
+    margin: 10px auto; /* Centers images and iframes */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+iframe {
+    height: 400px;
+    border: none;
+}
+
+/* Code Blocks */
+pre {
+    background-color: #222; /* Dark background for code */
+    color: #00ffcc; /* Teal for code */
+    padding: 15px;
+    border-radius: 8px;
+    overflow-x: auto;
+    margin: 10px 0;
+}
+
+code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    background: #333;
+    padding: 3px 6px;
+    border-radius: 4px;
+    color: #f1c40f;
+}
+
+/* Footer */
+footer {
+    background-color: #1e1e1e; /* Dark footer */
+    color: #f4f4f4;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 30px;
+    box-shadow: 0 -4px 6px rgba(255, 255, 255, 0.1);
+}
+
+footer p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+/* Scroll to Top Button */
+.scroll-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #f1c40f;
+    color: #000;
+    padding: 12px 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.scroll-top:hover {
+    background: #e6b800;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .lab-report h2 {
+        font-size: 1.75rem;
+    }
+
+    .lab-report h3 {
+        font-size: 1.25rem;
+    }
+
+    iframe {
+        height: 250px;
+    }
+}
+
+    </style>
 </head>
 <body class="lab-page">
     <header id="header" class="header dark-background">
