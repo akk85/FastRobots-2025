@@ -74,7 +74,20 @@
                 border-radius: 8px;
                 width: 80%;
             }
-            
+            .image-container {
+                display: flex; 
+                justify-content: center; 
+                align-items: center; 
+                gap: 15px; 
+            }
+
+            .image-container img {
+                max-width: 50%;
+                height: auto; /* Maintain aspect ratio */
+                border-radius: 8px; /* Optional: Rounded corners */
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Optional: Shadow effect */
+            }
+
         </style>
 
 </head>
@@ -85,7 +98,7 @@
 
     <h2>1. Lab Tasks Overview</h2>
     <p>This lab focused on setting up and testing the ICM-20948 IMU on the Artemis board.Here i played around and tested the internal workings on the 
-        IMU's Accelerometer and Gyroscope.</p>
+        the accelerometer and gyroscope of the IMU.</p>
     <hr>
 
     <h2>2. IMU Setup</h2>
@@ -142,7 +155,7 @@
 
     <p>
         To test the IMU calibration , I oriented the IMU at various angles to induce angles of -90, 0 and 90 degress to measure
-        pitch and roll at this angles. The accelremoter pitch and data values received were off by a couple of 
+        pitch and roll at this angles. The accelemoter pitch and data values received were off by a couple of 
         degrees hence a need for a two point calibration.
     </p>
     <h3>
@@ -164,12 +177,13 @@
         roll  = atan2(ax, az) * 180.0 / M_PI + roll_offset; </code></pre>
     <P>
         Shown below are the plots of pitch and roll at these various angles after the two point calibration. The highlighted regions
-        indiicate times when the IMU was pressed flush on 0 and (-90 , 90) degrees on my desk. The noise seen here is me changing the 
+        indicate times when the IMU was pressed flush on 0 and (-90 , 90) degrees on my desk. The noise seen here is me changing the 
         IMU orientation from angle to angle.
-    </P>
-        <img src="labs_img/pitch_data_calibrated.png" alt="Image of pitch data after calibration" width="600">
-        <img src="labs_img/roll_data_calibrated.png" alt="Image of roll data after calibration" width="600">
-    </p>
+
+    <div class="image-container">
+        <img src="labs_img/pitch_data_calibrated.png" alt="Image of pitch data after calibration">
+        <img src="labs_img/roll_data_calibrated.png" alt="Image of roll data after calibration">
+    </div>
 <!-- Code block -->
 <pre><code class="language-cpp"> accel_pitch = atan2(myICM.accY(), myICM.accZ()) * 180.0 / M_PI;
  accel_roll  = atan2(myICM.accX(), myICM.accZ()) * 180.0 / M_PI; </code></pre>
@@ -239,10 +253,16 @@ $$
 
  <p>
     Just as I did with the acclerometer, i measured the groscope data across the three degrees to induce pitch and roll. The measured was 
-    very noise and as seen from the collected data, the gyroscope drifts over time.
-    <img src="labs_img/Gyro_Pitch.png"  alt="Image of gyroscope pitch" width="500">
-    <img src="labs_img/Gyro_Roll.png"  alt="Image of gyroscope roll" width="500">
-    <img src="labs_img/Gyro_Yaw.png"  alt="Image of gyroscope yaw" width="500">
+    very noisy and as seen from the collected data, the gyroscope drifts over time.
+<!-- Image Container -->
+<div class="image-container">
+    <img src="labs_img/Gyro_Pitch.png" alt="Image of gyroscope pitch">
+    <img src="labs_img/Gyro_Roll.png" alt="Image of gyroscope roll">
+</div>
+<div class="image-container">
+    <img src="labs_img/Gyro_Yaw.png" alt="Image of gyroscope yaw">
+    <img src="labs_img/Gyro_at_-90 - 90.png" alt="Image of gyroscope yaw">
+</div>
  </p>
 
 
@@ -250,11 +270,30 @@ $$
     Complementary Filter
 </h2>
 <p>
-    When measuring gyroscope data, I observed noticeable drift over extended data collection periods. While it was less noisy than the accelerometer, it was also less accurate over time. To compensate, I implemented a complementary filter that combines both sensor readings. Based on my FFT analysis, I applied a low-pass filter to the accelerometer data with a 5 Hz cutoff frequency and weighted the gyroscope data more heavily in the fusion process. 
+    When measuring gyroscope data, I observed noticeable drift over extended data collection periods. 
+    While it was less noisy than the accelerometer, it was also less accurate over time. 
+    To compensate, I implemented a complementary filter that combines both sensor readings. 
+    Based on my FFT analysis, I applied a low-pass filter to the accelerometer data with a 5 Hz cutoff frequency and weighted 
+    the gyroscope data more heavily in the fusion process. 
 </p>
+<pre><code class="language-cpp">
+    // Accelerometer-based pitch & roll
+    accel_pitch = atan2(myICM.accY(), myICM.accZ()) * 180.0 / M_PI;
+    accel_roll  = atan2(myICM.accX(), myICM.accZ()) * 180.0 / M_PI;
 
+    // integrate gyro data
+    gyro_pitch += myICM.gyrY() * dt;
+    gyro_roll  += myICM.gyrX() * dt;
+
+    // complementary filter
+    comp_pitch = alpha * (comp_pitch + myICM.gyrY() * dt) + (1 - alpha) * accel_pitch;
+    comp_roll  = alpha * (comp_roll + myICM.gyrX() * dt) + (1 - alpha) * accel_roll;
+    </code></pre>
 <p>
-    After tuning, I found that an alpha value of \( \alpha = 0.60 \) produced the most stable results. The filter performed reliably within the \(-90^\circ\) to \(90^\circ\) range, but beyond this, the accelerometer's behavior became less predictable. Yaw was left unfiltered since the accelerometer cannot measure it—an interesting limitation given that yaw will be the most relevant parameter in future applications. 
+    After tuning, I found that an alpha value of \( \alpha = 0.60 \) produced the most stable results. 
+    The filter performed reliably within the \(-90^\circ\) to \(90^\circ\) range, but beyond this, 
+    the accelerometer's behavior became less predictable. Yaw was left unfiltered since the accelerometer cannot measure 
+    it—an interesting limitation given that yaw will be the most relevant parameter in future applications. 
 </p>
 
 <p>
@@ -262,7 +301,7 @@ $$
 </p>
 
 <!-- Example for including images -->
-<img src="labs_img/complemenatry_filter.png" alt="Pitch and Roll Filter Result" width="400">
+<img src="labs_img/complemenatry_filter.png" alt="Pitch and Roll Filter Result" width="500">
 
     <h2>5. Sample Data Collection</h2>
     <p>
@@ -321,7 +360,7 @@ ble.send_command(CMD.STOP_IMU_DATA, "")</code></pre>
     </h2>
     <p>
         The last task was to record a stunt video playing around with the RC car. Overall, I felt it was a really fast car in need of additional tuning.
-        Preety excited to work on this robot car.
+        Pretty excited to work on this robot car.
         <iframe width="560" height="315" src="https://youtube.com/embed/6gD3eocuHSk" frameborder="0" allowfullscreen></iframe>
     </p>
     <h2>Conclusion</h2>
