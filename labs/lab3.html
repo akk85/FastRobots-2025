@@ -3,10 +3,429 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 3 Placeholder</title>
+    <title>Lab 3: Time of Flight Sensors</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2.5em;
+            animation: fadeInDown 1s ease-out;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 12px;
+            margin-top: 35px;
+            font-size: 1.8em;
+            animation: fadeInLeft 1s ease-out;
+        }
+        h3 {
+            color: #4a7c8c;
+            margin-top: 25px;
+            font-size: 1.5em;
+            animation: fadeInRight 1s ease-out;
+        }
+        p {
+            margin: 15px 0;
+            color: #666;
+            font-size: 1.1em;
+        }
+        img {
+            max-width: 80%;
+            max-height: 500px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.05);
+            opacity: 0.95;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            color: #555;
+            transition: background-color 0.3s ease;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        td:hover {
+            background-color: #f0f0f0;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        pre:hover {
+            transform: scale(1.02);
+        }
+        .placeholder {
+            color: #888;
+            font-style: italic;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        .placeholder:hover {
+            opacity: 1;
+        }
+        /* Image Containers */
+        .image-container, .two-image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+        }
+        .image-container:hover, .two-image-container:hover {
+            transform: scale(1.02);
+        }
+        .image-container img, .two-image-container img {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            max-width: 30%; /* Fits three images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .two-image-container img {
+            max-width: 48%; /* Fits two images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            max-width: 80%;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        iframe:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1200px) {
+            .section-container { max-width: 95%; padding: 15px; }
+            img, iframe { max-width: 90%; max-height: 400px; }
+            .image-container img, .two-image-container img { max-width: 45%; }
+            table { width: 95%; }
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.6em; }
+            h3 { font-size: 1.3em; }
+        }
+        @media (max-width: 768px) {
+            .section-container { max-width: 90%; padding: 10px; }
+            img, iframe { max-width: 100%; max-height: 250px; }
+            .image-container img, .two-image-container img { max-width: 100%; }
+            table { width: 100%; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.1em; }
+            p { font-size: 1em; }
+        }
+        @media (max-width: 480px) {
+            .section-container { padding: 5px; }
+            img, iframe { max-height: 200px; }
+            pre { font-size: 0.8em; padding: 10px; }
+            table { font-size: 0.9em; }
+            button { padding: 8px 15px; font-size: 0.9em; }
+        }
+    </style>
+    <script>
+        // Smooth scrolling for navigation (if needed, add links later)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Image lazy loading with animation (improved)
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.image-container img, .two-image-container img');
+            images.forEach(img => {
+                img.style.opacity = '0';
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.animation = 'fadeIn 1s ease-out forwards';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '50px' });
+                observer.observe(img);
+            });
+        });
+
+        // Dynamic table toggle for sensor data (enhanced with animation)
+        function toggleTable() {
+            const table = document.querySelector('table');
+            if (table) {
+                if (table.style.display === 'none' || table.style.display === '') {
+                    table.style.display = 'table';
+                    table.style.animation = 'fadeIn 0.5s ease-out';
+                } else {
+                    table.style.animation = 'fadeOut 0.5s ease-out';
+                    setTimeout(() => table.style.display = 'none', 500);
+                }
+            }
+        }
+
+        // Image zoom on click (optional, add to images)
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('click', function() {
+                this.classList.toggle('enlarged');
+                if (this.classList.contains('enlarged')) {
+                    this.style.maxWidth = '90%';
+                    this.style.maxHeight = '80vh';
+                    this.style.position = 'fixed';
+                    this.style.top = '50%';
+                    this.style.left = '50%';
+                    this.style.transform = 'translate(-50%, -50%)';
+                    this.style.zIndex = '1000';
+                    this.style.cursor = 'zoom-out';
+                } else {
+                    this.style.maxWidth = '80%';
+                    this.style.maxHeight = '500px';
+                    this.style.position = 'static';
+                    this.style.top = 'auto';
+                    this.style.left = 'auto';
+                    this.style.transform = 'none';
+                    this.style.zIndex = 'auto';
+                    this.style.cursor = 'default';
+                }
+            });
+        });
+
+        // Add fade animations for sections
+        document.querySelectorAll('h1, h2, h3, p').forEach(element => {
+            element.style.opacity = '0';
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.animation = 'fadeIn 1s ease-out';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(element);
+        });
+
+        // CSS animations for fadeOut (used in toggleTable)
+        const styles = document.createElement('style');
+        styles.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .enlarged {
+                max-width: 90% !important;
+                max-height: 80vh !important;
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 1000 !important;
+                cursor: zoom-out !important;
+            }`;
+        document.head.appendChild(styles);
+    </script>
 </head>
 <body>
-    <h1>Lab 3: Placeholder</h1>
-    <p>This is a placeholder for Lab 3 content.</p>
+    <div class="section-container">
+        <h1>Lab 3: Time of Flight Sensors</h1>
+
+        <h2>Introduction</h2>
+        <p>This lab explored the VL53L1X Time-of-Flight (ToF) sensors on an Artemis Nano, aiming to equip a robot with fast, reliable distance sensing. 
+            Tasks included I2C setup, single sensor mode testing, dual sensor operation, and integration with an IMU and Bluetooth.</p>
+
+        <h2>Prelab</h2>
+
+        <h3>1. Battery Power Preparation</h3>
+        <p>In the future, I hope to connect my Artemis Nano board to an RC car, requiring battery power without a tether to my MacBook. 
+            To prepare, I soldered a JST connector to the 750mAh battery from the RC car and used it to power my Artemis. This ensures untethered operation for mobile applications. I cut the battery wires one at a time to avoid shorting, soldered them to the JST jumper (red to positive, black to negative), and insulated with heat shrink. The Artemis powered on successfully via the battery, tested with a simple BLE sketch.</p>
+        <p><img src="labs_img/battery.jpg" alt="Soldered JST Connector and Battery"></p>
+
+        <h3>2. Bluetooth Connection Verification</h3>
+        <p>I then leveraged my previous lab’s implementation to send BLE commands to my battery-powered Artemis board, confirming a successful Bluetooth connection. 
+            Using a BLE sketch adapted from Lab 1, I powered the Artemis with the soldered JST connector and 650mAh battery, disconnected the USB tether, 
+            and send a BLE connection request from my macbook to the battery powered artemis.
+            The video below demonstrates this setup and successful BLE connection.</p>
+        <p><iframe width="560" height="315" src="https://www.youtube.com/embed/aRJfqusbxzU" title="BLE Connection Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+        
+        <h3>ToF Connection</h3>
+        <p>I soldered one of the provided QWIIC cables to the following pins on each VL53L1X ToF board: VIN to the red wire (power), GND to the black wire (ground), SDA for data to the blue wire, and SCL for clock to the yellow wire. This connects both sensors to the Artemis Nano via the QWIIC breakout board, enabling I2C communication.</p>
+        <div class="image-container">
+            <img src="labs_img/tof_connection.jpg" alt="Soldered QWIIC Cable to ToF Sensor 1">
+            <img src="labs_img/tof_connection_2.jpg" alt="Soldered QWIIC Cable to ToF Sensor 2">
+        </div>
+
+        <h3>3. I2C Address</h3>
+        <p>The VL53L1X datasheet specifies a default I2C address of 0x52,however through the Artemis scan, the address was found to be 0x29. 
+            This is because the last signifant bit is used for read amd write direction status , therefor the address represented
+            without this bit is shifted to the right 0b1010010 → 0b0101001 (52 -> 29). This operation is equivalent to halving the decimal equivalent. 
+        </p>
+        <p><img src="labs_img/I2C Address.png" alt="Wiring Diagram Placeholder"></p>
+
+        <h3>4. Dual Sensor Approach</h3>
+        <p>To manage two VL53L1X sensors with the same default I2C address (0x29), I used a hybrid method combining hardware and software control. 
+            Sensor 2’s XSHUT pin was connected to Artemis pin A8, allowing me to disable it initially by setting A8 LOW. 
+            This isolates Sensor 2, preventing it from responding on the I2C bus. 
+            Meanwhile, Sensor 1, with its XSHUT pin unconnected (always enabled via internal pull-up), initializes first at the default address 0x29.
+            I then programmatically change Sensor 1’s address to 0x48 using the SparkFun VL53L1X library’s <code>setI2CAddress()</code> function. 
+            After this, I enable Sensor 2 by setting A8 HIGH, allowing it to take the now-vacant 0x29 address.
+            This approach uses only one GPIO pin (A8) efficiently and ensures both sensors have unique addresses for simultaneous operation.</p>
+        <p>The decision to use XSHUT with a one-time address change, rather than reprogramming addresses programmatically on every Artemis power-on, 
+            was driven by reliability and simplicity. Reprogramming addresses each time requires both sensors to start at 0x29, risking bus conflicts if the sequence fails (e.g., power glitches or code errors). 
+            Using XSHUT to disable one sensor during initialization avoids this conflict entirely—only one sensor is active on the bus at a time. Additionally, once Sensor 1’s address is set to 0x48, it persists until power-off, reducing setup complexity on subsequent boots. While changing both addresses programmatically without XSHUT is possible, it demands precise timing and risks failure if the Artemis resets unexpectedly. The hybrid method balances hardware control (XSHUT) with minimal software overhead, making it robust for a battery-powered RC car application.</p>
+        <p><img src="labs_img/change_cde.png" alt="Code Screenshot for Address Change"></p>
+
+        <h3>5. Sensor Placement</h3>
+        <p>Sensors will be placed front-left and front-right on the robot, angled outward (~15°), to maximize obstacle detection. Blind spots include low objects below sensor height and thin poles between sensors.</p>
+        <p><img src="labs_img/sensor_placement.jpg" alt="Code Screenshot for Address Change"></p>
+        <h3>6. Wiring Diagram</h3>
+        <p>I wired the VL53L1X sensors using the following sketch, adapted from Wenyi Fu’s design, to reflect my setup. 
+            Sketch shows the Artemis Nano connected to the QWIIC breakout board, with Sensor 1 (XSHUT unconnected, always enabled),
+            Sensor 2 (XSHUT connected to Artemis pin A8).</p>
+        <p><img src="labs_img/Wiring.png" alt="Wiring Diagram"></p>
+
+        <h2>Lab Tasks</h2>
+ 
+        <h3>1. Single Sensor Mode Data</h3>
+        <p>At each distance, I measured 20 data points and calculated the mean and standard deviation to assess the VL53L1X sensor’s performance in Short mode. The mean provided the average measured distance, while the standard deviation informed me about the sensor’s precision (repeatability). I tested distances from 5 cm to 60 cm in 5 cm increments, using a ruler to set actual distances. The table below summarizes the results, and the plots visualize the mean, absolute error, and standard deviation.</p>
+
+        <div class="image-container">
+            <img src="labs_img/measured_distance.png" alt="Mean Measured vs Actual Distance">
+            <img src="labs_img/absolute_error.png" alt="Absolute Error vs Actual Distance">
+            <img src="labs_img/repeatabilty.png" alt="Standard Deviation vs Actual Distance">
+        </div>
+
+        <h3>2. Dual Sensors</h3>
+        <p>With the sensors wired as described in the ToF Connection section, I set their distance mode to Short and tested them in parallel. 
+            I taped the ToF sensors and my laptop in a flat orientation on a table and used a ruler to measure actual distances from my room’s wall. 
+            This setup confirmed both sensors operated simultaneously with unique addresses.</p>
+            <div class="two-image-container">
+                <img src="labs_img/laptop_sensor.jpg" alt="ToF Sensor Taped to Laptop">
+                <img src="labs_img/wall_ruler.jpg" alt="Ruler Measuring Distance from Wall">
+            </div>   
+
+        <h3>3. ToF Sensor Speed</h3>
+            <p>I tested the sensing speed of my dual VL53L1X sensors in Short mode, measuring the loop time to collect and output distances for both sensors. 
+                Using non-blocking reads with <code>checkForDataReady()</code> and <code>millis()</code> timing, I achieved loop times of 4–13 ms, averaging ~10 ms with sensor reads and 4–6 ms without. 
+            </p>
+                <p><img src="labs_img/sensing_speed.png" alt="Sensor Speed Data Screenshot"></p>
+            <p>
+                This corresponds to approximately 100 Hz potential, but actual cycles for both sensors take ~100 ms (10 loops), slower than the expected 50 Hz (20 ms per reading) per the datasheet. 
+                The primary limiting factor is the sensor ranging time, approximately 50 ms per sensor in Short mode, as specified in the VL53L1X datasheet. 
+                Increasing I2C speed to 400 kHz or reducing Serial output could slightly improve speed, but ranging time remains dominant.
+            </p>
+                <p><img src="labs_img/sensor_speed_data.png" alt="Sensor Speed Data Screenshot"></p>
+        
+        <h3>4. Time vs. Distance</h3>
+        <p>I collected timestamped distance data from both sensors over Bluetooth, and plotted it to analyze performance over time. 
+            Both Sensor 1 (ToF 1) and Sensor 2 (ToF 2) operated in Short mode, with distances varying from 60 mm to 350 mm and 10 mm to 300 mm, respectively, 
+            reflecting movement or object changes (e.g., objects moving closer then farther over 10 seconds). The plot below shows this data, sent untethered via BLE.</p>
+        <div class="two-image-container">
+            <img src="labs_img/time_over_ble.png" alt="Time vs. Distance Plot">
+        </div> 
+
+        <h3>7. Time vs. Angle</h3>
+        <p>I integrated the IMU, recorded timestamped angle data over Bluetooth, and plotted time vs. angle to analyze the robot’s orientation. 
+            The plot below shows this data, sent untethered via BLE.</p>
+        <div class="two-image-container">
+            <img src="labs_img/angle_ble.png" alt="Time vs. Angle Plot"></p>
+        </div> 
+        <h3>Conclusion</h3>
+        <p>Overall, this lab was a rewarding experience working with the ToF sensors. I also enjoyed soldering QWIIC cables and the JST connector to the sensors and Artemis board,
+             preparing for the RC untethered operations. This lab demonstrated robust sensor integration and Bluetooth functionality for mobile robotics.</p>
+    </div>
+
+    
 </body>
 </html>
