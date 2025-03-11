@@ -3,10 +3,417 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 4 Placeholder</title>
+    <title>Lab 4: Motors and Open Loop Control</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2.5em;
+            animation: fadeInDown 1s ease-out;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 12px;
+            margin-top: 35px;
+            font-size: 1.8em;
+            animation: fadeInLeft 1s ease-out;
+        }
+        h3 {
+            color: #4a7c8c;
+            margin-top: 25px;
+            font-size: 1.5em;
+            animation: fadeInRight 1s ease-out;
+        }
+        p {
+            margin: 15px 0;
+            color: #666;
+            font-size: 1.1em;
+        }
+        img {
+            max-width: 80%;
+            max-height: 500px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.05);
+            opacity: 0.95;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            color: #555;
+            transition: background-color 0.3s ease;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        td:hover {
+            background-color: #f0f0f0;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        pre:hover {
+            transform: scale(1.02);
+        }
+        .placeholder {
+            color: #888;
+            font-style: italic;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        .placeholder:hover {
+            opacity: 1;
+        }
+        /* Image Containers */
+        .image-container, .two-image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+        }
+        .image-container:hover, .two-image-container:hover {
+            transform: scale(1.02);
+        }
+        .image-container img, .two-image-container img {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            max-width: 30%; /* Fits three images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .two-image-container img {
+            max-width: 48%; /* Fits two images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            max-width: 80%;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        iframe:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1200px) {
+            .section-container { max-width: 95%; padding: 15px; }
+            img, iframe { max-width: 90%; max-height: 400px; }
+            .image-container img, .two-image-container img { max-width: 45%; }
+            table { width: 95%; }
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.6em; }
+            h3 { font-size: 1.3em; }
+        }
+        @media (max-width: 768px) {
+            .section-container { max-width: 90%; padding: 10px; }
+            img, iframe { max-width: 100%; max-height: 250px; }
+            .image-container img, .two-image-container img { max-width: 100%; }
+            table { width: 100%; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.1em; }
+            p { font-size: 1em; }
+        }
+        @media (max-width: 480px) {
+            .section-container { padding: 5px; }
+            img, iframe { max-height: 200px; }
+            pre { font-size: 0.8em; padding: 10px; }
+            table { font-size: 0.9em; }
+            button { padding: 8px 15px; font-size: 0.9em; }
+        }
+    </style>
+    <script>
+        // Smooth scrolling for navigation (if needed, add links later)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Image lazy loading with animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.image-container img, .two-image-container img');
+            images.forEach(img => {
+                img.style.opacity = '0';
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.animation = 'fadeIn 1s ease-out forwards';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '50px' });
+                observer.observe(img);
+            });
+        });
+
+        // Dynamic table toggle for sensor data (not used here, kept for consistency)
+        function toggleTable() {
+            const table = document.querySelector('table');
+            if (table) {
+                if (table.style.display === 'none' || table.style.display === '') {
+                    table.style.display = 'table';
+                    table.style.animation = 'fadeIn 0.5s ease-out';
+                } else {
+                    table.style.animation = 'fadeOut 0.5s ease-out';
+                    setTimeout(() => table.style.display = 'none', 500);
+                }
+            }
+        }
+
+        // Image zoom on click
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('click', function() {
+                this.classList.toggle('enlarged');
+                if (this.classList.contains('enlarged')) {
+                    this.style.maxWidth = '90%';
+                    this.style.maxHeight = '80vh';
+                    this.style.position = 'fixed';
+                    this.style.top = '50%';
+                    this.style.left = '50%';
+                    this.style.transform = 'translate(-50%, -50%)';
+                    this.style.zIndex = '1000';
+                    this.style.cursor = 'zoom-out';
+                } else {
+                    this.style.maxWidth = '80%';
+                    this.style.maxHeight = '500px';
+                    this.style.position = 'static';
+                    this.style.top = 'auto';
+                    this.style.left = 'auto';
+                    this.style.transform = 'none';
+                    this.style.zIndex = 'auto';
+                    this.style.cursor = 'default';
+                }
+            });
+        });
+
+        // Fade animations for sections
+        document.querySelectorAll('h1, h2, h3, p').forEach(element => {
+            element.style.opacity = '0';
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.animation = 'fadeIn 1s ease-out';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(element);
+        });
+
+        // CSS animations for fadeOut
+        const styles = document.createElement('style');
+        styles.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .enlarged {
+                max-width: 90% !important;
+                max-height: 80vh !responsivimportant;
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 1000 !important;
+                cursor: zoom-out !important;
+            }`;
+        document.head.appendChild(styles);
+    </script>
 </head>
 <body>
-    <h1>Lab 4: Placeholder</h1>
-    <p>This is a placeholder for Lab 4 content.</p>
+    <div class="section-container">
+        <h1>Lab 4: Motors and Open Loop Control</h1>
+        <p><em></em></p>
+
+        <h2>Prelab</h2>
+        <p>To prepare for Lab 4, I designed the motor control circuit using the SparkFun RedBoard Artemis Nano and two DRV8833 dual motor drivers. 
+            Each driver controls one motor, with inputs and outputs paralleled to double current capacity (~3A total), 
+            as recommended in the datasheet. The Artemis pins were chosen for PWM capability: A0 (IN1) and A1 (IN2) for 
+            Motor 1 (left), A2 (IN1) and A3 (IN2) for Motor 2 (right). The connection diagram shows the Artemis powered via USB 
+            and motor drivers via a 3.7V 850mAh battery, separated to avoid EMI from motor switching affecting the Artemis. 
+            This decoupling ensures stable sensor operation later. This connection was inspired by Stephen Wagner's connection (SPRING 2024)</p>
+        <p><img src="labs_img/lab4_connection_diagram.png" alt="Connection Diagram"></p>
+
+        <h2>Lab Tasks</h2>
+
+        <h3>Oscilloscope Setup</h3>
+
+        <div class="image-container">
+            <img src="labs_img/oscilo_code.png" alt="Oscilloscope Setup">
+        </div>
+        <p>After soldering one of the two motor drivers to my artemis board, I tested it's output working with an external 3.7V bench supply to match the battery voltage, ensuring safe debugging. 
+            Using A0 (HIGH_PIN) and A2 (PWM_PIN), I swept PWM from 0–255 and probed the paralleled AOUT1/BOUT1 output inspired by Nila Narayan’s example from 2024. 
+        </p>
+
+
+        <div class="image-container">
+            <img src="labs_img/scopeimage.jpg" alt="Oscilloscope Waveform at PWM 127">
+        </div>
+        <h3>Motor Integration</h3>
+        <p>I disassembled the Force1 RC car as instructed on the lab handout , removed the custom control PCB, and wired the left motor to one of the drivers. With the car elevated, 
+            I tested forward motion (A0/A2 ), verifying both wheels spun correctly after adjusting Motor 1’s direction (initially reversed). The motor driver were still
+            powered on by the 3.7 bench supply which I later switched to battery power for the next sections.
+            Switching to battery power (3.7V), the motors ran consistently.</p>
+            
+            <p><iframe width="560" height="315" src="https://youtube.com/embed/7SsE9c39gcw " title="BLE Connection Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+            <p>
+                I used the code snippet below with analogWrite() to get the wheels on one side of the car to spin in both directions. 
+            </p>
+            
+             <P>
+                <img src="labs_img/code_motor.png" alt="Oscilloscope Setup" width="300" >
+             </P>   
+
+        <h4>
+            Dual Motor 
+        </h4>
+        <p>
+            With one dual motor driver connected, working, and powered by battery, I soldered a second motor driver much the same way, this time to pins 3 and 4 on the Artemis. 
+            I then connected both drivers to the same battery cable and used analogWrite() to test both motors.
+        </p>
+
+        <p><iframe width="560" height="315" src="https://youtube.com/embed/g04UHtWqFnY" title="BLE Connection Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+        <p>
+            I used the code snippet below with analogWrite() to get the wheels on both side of the car to spin in both directions. 
+        </p>
+        <p> <img src="labs_img/dual_motor.png" alt="Oscilloscope Setup" ></p>
+
+
+
+
+        <h3>Chassis Installation</h3>
+        <p>Components were secured in the chassis (Artemis center, drivers on sides, battery below), minimizing EMI and ensuring nothing protruded beyond wheels. On-ground tests in the hallway used a 5s delay to avoid chasing the fast car.</p>
+        <p><img src="labs_img/chasis.jpg" alt="Chassis Setup"></p>
+
+        <h3>Minimum PWM </h3>
+        <p>On the floor, I tested PWM values experimentally and found that the car began moving at PWM 60 forward (slightly higher to start due to static friction) and 80 for turns, consistent with motor thresholds.
+        </p>
+
+        <p><img src="labs_img/pwm_test.png" alt="Pwm Test"></p>
+
+
+        <h3>Calibration </h3>
+        <p>
+            Testing my motors, the car would turn to the left when driving straight. This implied that the left motors were spinning at a higher rate 
+            than the right motors, hence need for calibration. 
+        </p>
+        <p><iframe width="560" height="315" src="https://youtube.com/embed/RhzSsYUuk_8" title="BLE Connection Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><p>
+
+        <p>
+            To find a good calibration factor, I tested different values manually from 0.95 and ended up finding that at 0.8 , the car maintained a straight line
+            motion implying both motors were now spinnig at the same speed rate. 
+        </p>
+
+        <p><iframe width="560" height="315" src="https://youtube.com/embed/iz4seYx4e0I" title="BLE Connection Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+        
+
+        
+        <h3>Open-Loop Control </h3>
+
+        <p>I programmed an untethered sequence: forward 2m , left  , forward 2m, right , forward 2m, using PWM 70 and factor 0.8. After uploading and disconnecting USB, the battery-powered car executed this flawlessly.</p>
+        
+
+        <h2>Conclusion</h2>
+        <p>This lab transitioned my car from manual to open-loop control, leveraging PWM and calibration for reliable motion. Key findings include a minimum PWM of 60 (forward) and 80 (turns), with a 0.8 calibration factor ensuring straightness. The untethered sequence demonstrated robust motor control, ready for future sensor integration.</p>
+
+
+    </div>
 </body>
 </html>
