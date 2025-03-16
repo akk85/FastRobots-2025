@@ -405,10 +405,12 @@
         
 
         
-        <h3>Open-Loop Control </h3>
-
-        <p>I programmed an untethered sequence: forward 2m , left  , forward 2m, right , forward 2m, using PWM 70 and factor 0.8. After uploading and disconnecting USB, the battery-powered car executed this flawlessly.</p>
-        
+        <h3>Open-Loop Control (Task 10)</h3>
+        <p>I programmed an untethered, open-loop sequence using PWM 190 (forward/backward) and 255 (turns) with a calibration factor of 0.8. After uploading and disconnecting USB, the battery-powered car executed this sequence reliably on the floor.</p>
+        <p><iframe width="560" height="315" src="https://www.youtube.com/embed/-BQFblVlkQ4" title="Open-Loop Sequence" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+        <p><em>Note: Don’t mind the gloomy video—I recorded this in my basement with no windows and minimal lighting.</em></p>
+        <p>The code snippet below outlines the sequence implemented:</p>
+        <p><img src="labs_img/Screenshot 2025-03-16 at 2.17.03 PM.png" alt="Pwm Test"></p>
 
         <h2>Conclusion</h2>
         <p>This lab transitioned my car from manual to open-loop control, leveraging PWM and calibration for reliable motion. Key findings include a minimum PWM of 60 (forward) and 80 (turns), with a 0.8 calibration factor ensuring straightness. The untethered sequence demonstrated robust motor control, ready for future sensor integration.</p>
