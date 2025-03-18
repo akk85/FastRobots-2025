@@ -319,46 +319,19 @@
 </head>
 <body>
     <h1>Lab 6: Linear PID Control</h1>
-    <h2>Prelab </h2>
-    <p>I implemented Bluetooth Low Energy (BLE) communication between the Artemis board and a 
-        Python script to send commands and receive data. 
-        Using the code from lab 2 and 3 as a starting point, I added new Robot commands for PID Control. 
-        Using previous code from lab 3, I made sure my sensors were still working  by serial printing the values returned by the front tof sensor.
-    <p>
-        <P>
-            <img src="labs_img/test_sensor.png" alt="Oscilloscope Setup" width="300" >
-         </P>   
-    <p>
-        By adding new commands for the PID control, I could communicate via ble with the board and get the tof sensor for pid control and manipulation.
-    </p>
-     <div class="two-image-container">
-        <img src="labs_img/new_commands.png" alt="Soldered QWIIC Cable to ToF Sensor 2">
-        <img src="labs_img/dummy_pid.png" alt="Soldered QWIIC Cable to ToF Sensor 1">
-    </div>
-    <P>This allowed me to just tune and get the data from my RC car withiut having to reupload the code everytime. 
-    Came in handy during debugging and turing the PID parameter during testing. Now I could have the board send via ble
-    time, distance, pwm and error data. I setup a notification handler in jupyter notebook to parse the recieved data into 
-    different arrays for graphing and review.
-    </p>
+    <p>I implemented Bluetooth Low Energy (BLE) communication between the Artemis board and a Python script for wireless command transmission and data reception. This enables real-time debugging and PID parameter tuning without reprogramming, critical for iterative testing. Building on Labs 2 and 3 code, I added PID-specific commands (e.g., starting the PID loop, updating gains) and confirmed the front ToF sensor’s functionality via serial prints.</p>
+    <p><img src="labs_img/test_sensor.png" alt="Serial print of ToF sensor values"></p>
+    <p>BLE commands facilitated sending instructions and receiving time, distance, PWM, and error data. A Jupyter Notebook notification handler parsed this data into arrays for analysis and graphing, aiding PID tuning.</p>
     <div class="two-image-container">
-        <img src="labs_img/notif_handler.png" alt="Soldered QWIIC Cable to ToF Sensor 2">
-        <img src="labs_img/receive_data_ble.png" alt="Soldered QWIIC Cable to ToF Sensor 1">
+        <img src="labs_img/new_commands.png" alt="BLE commands for PID control">
+        <img src="labs_img/notif_handler.png" alt="Notification handler in Jupyter Notebook">
     </div>
+
     <h2>
         Lab Tasks
     </h2>
     <h3>Range and Sampling Time</h3>
-    <p>To determine the sensor’s ranging time, I printed the time after each PID calculation, 
-        revealing a consistent 100 ms interval, corresponding to a sampling rate of 10 Hz. 
-        I explored the Pololu library to reduce this time, testing values below 100 ms, 
-        but found that faster settings significantly degraded the ToF sensor’s accuracy.
-         Applying a low-pass filter to these faster readings could have mitigated noise, 
-         but it would introduce a delay, impairing the PID controller’s responsiveness. 
-         I also experimented with `setProximityIntegrationTime()`, but the default settings proved optimal 
-         for my system’s reliability and simplicity. Thus, I maintained the 100 ms ranging time to ensure 
-         accurate distance measurements.</p>
-    <p>The PID loop operates much faster, running at 2 ms intervals (500 Hz), as determined by printing the time in my main loop</p>
-
+    <p>The ToF sensor’s sampling rate, measured via timestamps, is 10 Hz (100 ms interval). Attempts to increase speed using the Pololu library reduced accuracy, so I retained the 100 ms setting for reliability. The PID loop runs at 500 Hz (2 ms interval), meaning it often uses outdated distance data, which may delay responses at higher speeds.</p>
     <h3>
         Deadband 
     </h3>
@@ -370,46 +343,36 @@
         I found a deadband value of just outside 45. I incoporated this in my drive motor code as shown below.
     </p>
     <img src="labs_img/deaband.png" alt="Soldered QWIIC Cable to ToF Sensor 1">
+
+
     <h3>Tuning Parameters</h3>
-<p>
-    To tune my PID system, I started by setting <strong>Kp</strong>, <strong>Ki</strong>, and <strong>Kd</strong> to zero. I then calculated a theoretical value for <strong>Kp</strong> and reduced it from this value until the system's oscillations became steady and overshoot was minimized. Next, I increased <strong>Ki</strong> until the steady-state error (the difference between the target and actual position) was eliminated. Finally, I increased <strong>Kd</strong> to reduce the amplitude of oscillations.
-</p>
-<p>
-    To avoid destroying my front mounted tof camera, i begubn the experiment by driving the rc robot into a softer box waller 
-    and later moved to a concrete wall when I felt confident on my kp PID value.
-</p>
+    <p>
+        To avoid destroying my front mounted tof camera, i begubn the experiment by driving the rc robot into a softer box waller 
+        and later moved to a concrete wall when I felt confident on my kp PID value.
+    </p>
 
-<img src="labs_img/box_wall.jpg" alt="Softer bOX WALL">
+    <img src="labs_img/box_wall.jpg" alt="Softer bOX WALL">
 
-<h3>Proportional Controller Gain (Kp)</h3>
-<p>
-    To set <strong>Kp</strong>, I considered the motor's input range (PWM values from 0 to 255), the range of the time-of-flight (TOF) sensor's output, and the desired response of the system. <strong>Kp</strong> must be scaled so that the maximum error multiplied by <strong>Kp</strong> does not exceed the motor's input range. For example, if the maximum error is large, <strong>Kp</strong> needs to be small to avoid exceeding the PWM limit.
-</p>
+    <p>
+        To tune my PID system, I started by setting <strong>Kp</strong>, <strong>Ki</strong>, and <strong>Kd</strong> to zero. I then calculated a theoretical value for <strong>Kp</strong> and reduced it from this value until the system's oscillations became steady and overshoot was minimized. Next, I increased <strong>Ki</strong> until the steady-state error (the difference between the target and actual position) was eliminated. Finally, I increased <strong>Kd</strong> to reduce the amplitude of oscillations.
+    </p>
 
-<div class="two-image-container">
-    <img src="labs_img/distvstime.png" alt="Soldered QWIIC Cable to ToF Sensor 2">
-    <img src="labs_img/errorvstime.png" alt="Soldered QWIIC Cable to ToF Sensor 1">
-</div>
-<p>The objective of this lab was to implement positional control using a PID controller, enabling the robot to drive toward a 
-    wall at maximum speed and stop precisely at 1 foot (304 mm) from it. 
-    The controller was designed to accommodate a wide range of starting distances, necessitating robust distance sensing. 
-    To achieve this, I configured the front mounted sensor in long-distance mode using `distanceSensor1.setDistanceModeLong()`, 
-    which enhanced the sensor’s range and provided faster readings, supporting initial distances from 2–4 meters( which was my test distance)</p>
-<p>I began with a P-only controller, setting Kp = 0.063, Kd = 0.0, and Ki = 0.0, 
-    with a stop tolerance of 20 mm and a max PWM cap of 150 to prevent crashes. The kp values was
-    inspired by previous reports so figured it would be a good safe spot to start with.
-    This choice allowed the robot to move steadily toward the wall without immediate instability, 
-    stopping at 205 mm with a 99 mm overshoot. The absence of a derivative term (Kd = 0.0) led to 
-    significant momentum carryover, while Ki = 0.0 left a steady-state error. 
-    Introducing Kd = 0.2 with Kp = 0.069 in a prior test caused a crash, likely due to noise amplification. 
-    To address this, I adjusted to Kp = 0.05, Kd = 0.1
-    reduced the stop tolerance to 5 mm, and increased smoothing (alpha = 0.2) to stabilize 
-    the derivative term and minimize overshoot.</p>
 
-    <p><iframe width="560" height="315" src="https://youtube.com/embed/MZexb6FL43M" title="Car Wall Video Kp working" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
-    <h3>
-        Extrapolation
-    </h3>
+    <p>Starting with a proportional-only controller (Kp = 0.063, Ki = 0.0, Kd = 0.0), the robot approached the wall with a 99 mm overshoot, stopping at 205 mm (tolerance: 20 mm, PWM cap: 150). Adding the derivative term (Kd = 0.1) and adjusting Kp to 0.05 reduced overshoot, while Ki remained 0.0 due to negligible steady-state error. Final values: Kp = 0.05, Kd = 0.1, Ki = 0.0, tolerance = 5 mm.</p>
+    <div class="two-image-container">
+        <img src="labs_img/distvstime.png" alt="Distance vs. Time">
+        <img src="labs_img/errorvstime.png" alt="Error vs. Time">
+    </div>
+    <p>The video shows the robot stopping at 304 mm with minimal overshoot. Three trials confirmed reliability within 5 mm, and the distance vs. time plot indicated a maximum speed of 0.5 m/s.</p>
+    <p><iframe width="560" height="315" src="https://youtube.com/embed/MZexb6FL43M" title="PID Control Demonstration" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+    
+
+
+    <h3>Extrapolation</h3>
+    <p>To address the ToF’s slow 10 Hz rate, I implemented linear extrapolation for distance estimates between updates. The PID loop runs at 500 Hz, using new ToF data when available or extrapolating otherwise. The formula, <code>estimated_distance = last_distance + ((last_distance - previous_distance) / 0.1) * time_since_last</code>, calculates the current distance using the last two readings and elapsed time. After fixing a loose motor GND pin, this improved responsiveness and stopping precision.</p>
+    
+    <p><iframe width="560" height="315" src="https://youtube.com/embed/MZexb6FL43M" title="Extrapolation Demonstration" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
     <p><em> Note to self and TA: Need to resolder my gnd motor pin, came loose during testing.</em></p>
+
 </body>
 </html>
