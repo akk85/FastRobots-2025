@@ -3,10 +3,413 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 5 Placeholder</title>
+    <title>Lab 4: Motors and Open Loop Control</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2.5em;
+            animation: fadeInDown 1s ease-out;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 12px;
+            margin-top: 35px;
+            font-size: 1.8em;
+            animation: fadeInLeft 1s ease-out;
+        }
+        h3 {
+            color: #4a7c8c;
+            margin-top: 25px;
+            font-size: 1.5em;
+            animation: fadeInRight 1s ease-out;
+        }
+        p {
+            margin: 15px 0;
+            color: #666;
+            font-size: 1.1em;
+        }
+        img {
+            max-width: 80%;
+            max-height: 500px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.05);
+            opacity: 0.95;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            color: #555;
+            transition: background-color 0.3s ease;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        td:hover {
+            background-color: #f0f0f0;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        pre:hover {
+            transform: scale(1.02);
+        }
+        .placeholder {
+            color: #888;
+            font-style: italic;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        .placeholder:hover {
+            opacity: 1;
+        }
+        /* Image Containers */
+        .image-container, .two-image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+        }
+        .image-container:hover, .two-image-container:hover {
+            transform: scale(1.02);
+        }
+        .image-container img, .two-image-container img {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            max-width: 30%; /* Fits three images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .two-image-container img {
+            max-width: 48%; /* Fits two images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            max-width: 80%;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        iframe:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1200px) {
+            .section-container { max-width: 95%; padding: 15px; }
+            img, iframe { max-width: 90%; max-height: 400px; }
+            .image-container img, .two-image-container img { max-width: 45%; }
+            table { width: 95%; }
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.6em; }
+            h3 { font-size: 1.3em; }
+        }
+        @media (max-width: 768px) {
+            .section-container { max-width: 90%; padding: 10px; }
+            img, iframe { max-width: 100%; max-height: 250px; }
+            .image-container img, .two-image-container img { max-width: 100%; }
+            table { width: 100%; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.1em; }
+            p { font-size: 1em; }
+        }
+        @media (max-width: 480px) {
+            .section-container { padding: 5px; }
+            img, iframe { max-height: 200px; }
+            pre { font-size: 0.8em; padding: 10px; }
+            table { font-size: 0.9em; }
+            button { padding: 8px 15px; font-size: 0.9em; }
+        }
+    </style>
+    <script>
+        // Smooth scrolling for navigation (if needed, add links later)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Image lazy loading with animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.image-container img, .two-image-container img');
+            images.forEach(img => {
+                img.style.opacity = '0';
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.animation = 'fadeIn 1s ease-out forwards';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '50px' });
+                observer.observe(img);
+            });
+        });
+
+        // Dynamic table toggle for sensor data (not used here, kept for consistency)
+        function toggleTable() {
+            const table = document.querySelector('table');
+            if (table) {
+                if (table.style.display === 'none' || table.style.display === '') {
+                    table.style.display = 'table';
+                    table.style.animation = 'fadeIn 0.5s ease-out';
+                } else {
+                    table.style.animation = 'fadeOut 0.5s ease-out';
+                    setTimeout(() => table.style.display = 'none', 500);
+                }
+            }
+        }
+
+        // Image zoom on click
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('click', function() {
+                this.classList.toggle('enlarged');
+                if (this.classList.contains('enlarged')) {
+                    this.style.maxWidth = '90%';
+                    this.style.maxHeight = '80vh';
+                    this.style.position = 'fixed';
+                    this.style.top = '50%';
+                    this.style.left = '50%';
+                    this.style.transform = 'translate(-50%, -50%)';
+                    this.style.zIndex = '1000';
+                    this.style.cursor = 'zoom-out';
+                } else {
+                    this.style.maxWidth = '80%';
+                    this.style.maxHeight = '500px';
+                    this.style.position = 'static';
+                    this.style.top = 'auto';
+                    this.style.left = 'auto';
+                    this.style.transform = 'none';
+                    this.style.zIndex = 'auto';
+                    this.style.cursor = 'default';
+                }
+            });
+        });
+
+        // Fade animations for sections
+        document.querySelectorAll('h1, h2, h3, p').forEach(element => {
+            element.style.opacity = '0';
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.animation = 'fadeIn 1s ease-out';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(element);
+        });
+
+        // CSS animations for fadeOut
+        const styles = document.createElement('style');
+        styles.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .enlarged {
+                max-width: 90% !important;
+                max-height: 80vh !responsivimportant;
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 1000 !important;
+                cursor: zoom-out !important;
+            }`;
+        document.head.appendChild(styles);
+    </script>
 </head>
 <body>
-    <h1>Lab 5: Placeholder</h1>
-    <p>This is a placeholder for Lab 5 content.</p>
+    <h1>Lab 6: Linear PID Control</h1>
+    <h2>Prelab </h2>
+    <p>I implemented Bluetooth Low Energy (BLE) communication between the Artemis board and a 
+        Python script to send commands and receive data. 
+        Using the code from lab 2 and 3 as a starting point, I added new Robot commands for PID Control. 
+        Using previous code from lab 3, I made sure my sensors were still working  by serial printing the values returned by the front tof sensor.
+    <p>
+        <P>
+            <img src="labs_img/test_sensor.png" alt="Oscilloscope Setup" width="300" >
+         </P>   
+    <p>
+        By adding new commands for the PID control, I could communicate via ble with the board and get the tof sensor for pid control and manipulation.
+    </p>
+     <div class="two-image-container">
+        <img src="labs_img/new_commands.png" alt="Soldered QWIIC Cable to ToF Sensor 2">
+        <img src="labs_img/dummy_pid.png" alt="Soldered QWIIC Cable to ToF Sensor 1">
+    </div>
+    <P>This allowed me to just tune and get the data from my RC car withiut having to reupload the code everytime. 
+    Came in handy during debugging and turing the PID parameter during testing. Now I could have the board send via ble
+    time, distance, pwm and error data. I setup a notification handler in jupyter notebook to parse the recieved data into 
+    different arrays for graphing and review.
+    </p>
+    <div class="two-image-container">
+        <img src="labs_img/notif_handler.png" alt="Soldered QWIIC Cable to ToF Sensor 2">
+        <img src="labs_img/receive_data_ble.png" alt="Soldered QWIIC Cable to ToF Sensor 1">
+    </div>
+    <h2>
+        Lab Tasks
+    </h2>
+    <h3>Range and Sampling Time</h3>
+    <p>To determine the sensor’s ranging time, I printed the time after each PID calculation, 
+        revealing a consistent 100 ms interval, corresponding to a sampling rate of 10 Hz. 
+        I explored the Pololu library to reduce this time, testing values below 100 ms, 
+        but found that faster settings significantly degraded the ToF sensor’s accuracy.
+         Applying a low-pass filter to these faster readings could have mitigated noise, 
+         but it would introduce a delay, impairing the PID controller’s responsiveness. 
+         I also experimented with `setProximityIntegrationTime()`, but the default settings proved optimal 
+         for my system’s reliability and simplicity. Thus, I maintained the 100 ms ranging time to ensure 
+         accurate distance measurements.</p>
+    <p>The PID loop operates much faster, running at 2 ms intervals (500 Hz), as determined by printing the time in my main loop</p>
+
+    <h3>
+        Deadband 
+    </h3>
+    <p>
+        From previous lab, I had set the minimim pwm to 80 but for this lab, with extra experimenting, 
+    </p>
+    <img src="labs_img/motor_test_pwm.png" alt="Soldered QWIIC Cable to ToF Sensor 2">
+    <p>
+        I found a deadband value of just outside 45. I incoporated this in my drive motor code as shown below.
+    </p>
+    <img src="labs_img/deaband.png" alt="Soldered QWIIC Cable to ToF Sensor 1">
+    <h3>Tuning Parameters</h3>
+<p>
+    To tune my PID system, I started by setting <strong>Kp</strong>, <strong>Ki</strong>, and <strong>Kd</strong> to zero. I then calculated a theoretical value for <strong>Kp</strong> and reduced it from this value until the system's oscillations became steady and overshoot was minimized. Next, I increased <strong>Ki</strong> until the steady-state error (the difference between the target and actual position) was eliminated. Finally, I increased <strong>Kd</strong> to reduce the amplitude of oscillations.
+</p>
+<p>
+    To avoid destroying my front mounted tof camera, i begubn the experiment by driving the rc robot into a softer box waller 
+    and later moved to a concrete wall when I felt confident on my kp PID value.
+</p>
+
+<img src="labs_img/box_wall.jpg" alt="Softer bOX WALL">
+
+<h3>Proportional Controller Gain (Kp)</h3>
+<p>
+    To set <strong>Kp</strong>, I considered the motor's input range (PWM values from 0 to 255), the range of the time-of-flight (TOF) sensor's output, and the desired response of the system. <strong>Kp</strong> must be scaled so that the maximum error multiplied by <strong>Kp</strong> does not exceed the motor's input range. For example, if the maximum error is large, <strong>Kp</strong> needs to be small to avoid exceeding the PWM limit.
+</p>
+
+<div class="two-image-container">
+    <img src="labs_img/distvstime.png" alt="Soldered QWIIC Cable to ToF Sensor 2">
+    <img src="labs_img/errorvstime.png" alt="Soldered QWIIC Cable to ToF Sensor 1">
+</div>
+<p>The objective of this lab was to implement positional control using a PID controller, enabling the robot to drive toward a 
+    wall at maximum speed and stop precisely at 1 foot (304 mm) from it. 
+    The controller was designed to accommodate a wide range of starting distances, necessitating robust distance sensing. 
+    To achieve this, I configured the front mounted sensor in long-distance mode using `distanceSensor1.setDistanceModeLong()`, 
+    which enhanced the sensor’s range and provided faster readings, supporting initial distances from 2–4 meters( which was my test distance)</p>
+<p>I began with a P-only controller, setting Kp = 0.063, Kd = 0.0, and Ki = 0.0, 
+    with a stop tolerance of 20 mm and a max PWM cap of 150 to prevent crashes. The kp values was
+    inspired by previous reports so figured it would be a good safe spot to start with.
+    This choice allowed the robot to move steadily toward the wall without immediate instability, 
+    stopping at 205 mm with a 99 mm overshoot. The absence of a derivative term (Kd = 0.0) led to 
+    significant momentum carryover, while Ki = 0.0 left a steady-state error. 
+    Introducing Kd = 0.2 with Kp = 0.069 in a prior test caused a crash, likely due to noise amplification. 
+    To address this, I adjusted to Kp = 0.05, Kd = 0.1
+    reduced the stop tolerance to 5 mm, and increased smoothing (alpha = 0.2) to stabilize 
+    the derivative term and minimize overshoot.</p>
+
+    <p><iframe width="560" height="315" src="https://youtube.com/embed/MZexb6FL43M" title="Car Wall Video Kp working" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+    <h3>
+        Extrapolation
+    </h3>
+    <p><em> Note to self and TA: Need to resolder my gnd motor pin, came loose during testing.</em></p>
 </body>
 </html>
