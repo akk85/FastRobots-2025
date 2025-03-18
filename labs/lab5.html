@@ -319,12 +319,20 @@
 </head>
 <body>
     <h1>Lab 6: Linear PID Control</h1>
+    <div class="two-image-container">
+        <img src="labs_img/pid.jpg" alt="Softer bOX WALL">
+    </div>
     <h2>
         Prelab
     </h2>
     <p>I implemented Bluetooth Low Energy (BLE) communication between the Artemis board and a Python script for wireless command transmission and data reception. This enables real-time debugging and PID parameter tuning without reprogramming, critical for iterative testing. Building on Labs 2 and 3 code, I added PID-specific commands (e.g., starting the PID loop, updating gains) and confirmed the front ToF sensor’s functionality via serial prints.</p>
-    <p><img src="labs_img/test_sensor.png" alt="Serial print of ToF sensor values"></p>
+    <p>
+        <div class="two-image-container">
+            <img src="labs_img/test_sensor.png" alt="Softer bOX WALL">
+        </div>
+    </p>
     <p>BLE commands facilitated sending instructions and receiving time, distance, PWM, and error data. A Jupyter Notebook notification handler parsed this data into arrays for analysis and graphing, aiding PID tuning.</p>
+    
     <div class="two-image-container">
         <img src="labs_img/new_commands.png" alt="BLE commands for PID control">
         <img src="labs_img/notif_handler.png" alt="Notification handler in Jupyter Notebook">
@@ -340,22 +348,25 @@
     </h3>
     <p>
         From previous lab, I had set the minimim pwm to 80 but for this lab, with extra experimenting, 
-    </p>
-    <img src="labs_img/motor_test_pwm.png" alt="Soldered QWIIC Cable to ToF Sensor 2">
-    <p>
+        <div class="two-image-container">
+            <img src="labs_img/motor_test_pwm.png" alt="Softer bOX WALL">
+        </div>
         I found a deadband value of just outside 45. I incoporated this in my drive motor code as shown below.
     </p>
-    <img src="labs_img/deaband.png" alt="Soldered QWIIC Cable to ToF Sensor 1">
+    <div class="two-image-container">
+        <img src="labs_img/deaband.png" alt="Softer bOX WALL">
+    </div>
 
 
     <h3>Tuning Parameters</h3>
+
     <p>
         To avoid destroying my front mounted tof camera, i begubn the experiment by driving the rc robot into a softer box waller 
         and later moved to a concrete wall when I felt confident on my kp PID value.
     </p>
-
+    <div class="two-image-container">
     <img src="labs_img/box_wall.jpg" alt="Softer bOX WALL">
-
+    </div>
     <p>
         To tune my PID system, I started by setting <strong>Kp</strong>, <strong>Ki</strong>, and <strong>Kd</strong> to zero. I then calculated a theoretical value for <strong>Kp</strong> and reduced it from this value until the system's oscillations became steady and overshoot was minimized. Next, I increased <strong>Ki</strong> until the steady-state error (the difference between the target and actual position) was eliminated. Finally, I increased <strong>Kd</strong> to reduce the amplitude of oscillations.
     </p>
