@@ -319,6 +319,9 @@
 </head>
 <body>
     <h1>Lab 6: Linear PID Control</h1>
+    <h2>
+        Prelab
+    </h2>
     <p>I implemented Bluetooth Low Energy (BLE) communication between the Artemis board and a Python script for wireless command transmission and data reception. This enables real-time debugging and PID parameter tuning without reprogramming, critical for iterative testing. Building on Labs 2 and 3 code, I added PID-specific commands (e.g., starting the PID loop, updating gains) and confirmed the front ToF sensor’s functionality via serial prints.</p>
     <p><img src="labs_img/test_sensor.png" alt="Serial print of ToF sensor values"></p>
     <p>BLE commands facilitated sending instructions and receiving time, distance, PWM, and error data. A Jupyter Notebook notification handler parsed this data into arrays for analysis and graphing, aiding PID tuning.</p>
@@ -372,7 +375,9 @@
     <p>To address the ToF’s slow 10 Hz rate, I implemented linear extrapolation for distance estimates between updates. The PID loop runs at 500 Hz, using new ToF data when available or extrapolating otherwise. The formula, <code>estimated_distance = last_distance + ((last_distance - previous_distance) / 0.1) * time_since_last</code>, calculates the current distance using the last two readings and elapsed time. After fixing a loose motor GND pin, this improved responsiveness and stopping precision.</p>
     
     <p><iframe width="560" height="315" src="https://youtube.com/embed/MZexb6FL43M" title="Extrapolation Demonstration" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
-    <p><em> Note to self and TA: Need to resolder my gnd motor pin, came loose during testing.</em></p>
+    <p><em> Note to self and TA: Need to resolder my gnd motor pin, came loose during testing. Video above is just a 
+        placeholder 
+    </em></p>
 
 </body>
 </html>
