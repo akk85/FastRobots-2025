@@ -372,7 +372,10 @@
 
 
     <h3>Extrapolation</h3>
-    <p>To address the ToF’s slow 10 Hz rate, I implemented linear extrapolation for distance estimates between updates. The PID loop runs at 500 Hz, using new ToF data when available or extrapolating otherwise. The formula, <code>estimated_distance = last_distance + ((last_distance - previous_distance) / 0.1) * time_since_last</code>, calculates the current distance using the last two readings and elapsed time. After fixing a loose motor GND pin, this improved responsiveness and stopping precision.</p>
+    <p>To address the ToF’s slow 10 Hz rate, I implemented linear extrapolation for distance estimates between updates. 
+        The PID loop runs at 500 Hz, using new ToF data when available or extrapolating otherwise. 
+        The formula, <code>estimated_distance = last_distance + ((last_distance - previous_distance) / 0.1) * time_since_last</code>, 
+        calculates the current distance using the last two readings and elapsed time.</p>
     
     <p><iframe width="560" height="315" src="https://youtube.com/embed/MZexb6FL43M" title="Extrapolation Demonstration" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
     <p><em> Note to self and TA: Need to resolder my gnd motor pin, came loose during testing. Video above is just a 
