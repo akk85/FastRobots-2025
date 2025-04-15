@@ -368,7 +368,7 @@
     
     <h2>PID Tuning</h2>
     <p>
-        I began with a proportional-only controller, tuning Kp from 1.0 up to 2.5. 
+        <p>I restarted PID tuning with the calibrated motors. I began with <strong>proportional-only</strong> control using <code>update_yaw_pid_gains()</code> in Python to quickly test values from <code>Kp = 1.0</code> up to <code>2.5</code>. At <code>Kp = 1.8</code>, the robot started responding effectively. Beyond that, it overshot and oscillated.</p>
         To make it easier testing different kp values, I included a python function that sets the kp. kd and ki values of the controller depending on the provided inputs. This made testing
         alot easier compared to manually having to edit and burn the ardunino file onto the artemis for every test value. I should have totally done this for lab 5. Such a game changer.
     </p>
@@ -380,14 +380,12 @@
     </div>
 
     <p>
-        As Kp increased, the robot turned more decisively toward the setpoint but began to overshoot at values more than 2.6. I then added Ki and Kd to reduce steady-state error and dampen oscillations. 
+        As Kp increased, the robot turned more decisively toward the setpoint but began to overshoot at values more than 1.9. I then added Ki and Kd to reduce steady-state error and dampen oscillations. 
     </p>
     <div class="two-image-container">
         <img src="labs_img/yaw_full_pid.png" alt="Yaw with full PID">
     </div>
-    <p>
-        Final values were: <strong>Kp = 2.5</strong>, <strong>Ki = 0.02</strong>, and <strong>Kd = 0.7</strong> which were close to those tested in previous years.
-    </p>
+    <p>The final values I settled on were: <strong>Kp = 1.8</strong>, <strong>Ki = 0.02</strong>, <strong>Kd = 0.3</strong>. These produced a smooth curve with no sustained oscillation, moderate speed, and quick recovery from disturbances.</p>
     <div class="two-image-container">
     <img src="labs_img/python_yaw_full_pid.png" alt="Yaw with full PID">
     <div>
@@ -400,11 +398,13 @@
     <div class="two-image-container">
         <img src="labs_img/lab6_yaw_plot.png" alt="Yaw with full PID">
         <div>
-    <p><iframe width="560" height="315" src="https://youtube.com/embed/your_demo_video" title="Yaw PID Demo" frameborder="0" allowfullscreen></iframe></p>
-    
+    <p><iframe width="560" height="315" src="https://youtube.com/embed/SS-XCyFzllg" title="Yaw PID Demo" frameborder="0" allowfullscreen></iframe></p>
     <p>
-        Battery dead. Can't run motors for now
+        The video below shows the robot executing the yaw PID controller using the final tuned values of 
+        <strong>Kp = 1.8</strong>, <strong>Ki = 0.02</strong>, and <strong>Kd = 0.3</strong>. 
+        The robot rotates toward the 90° setpoint and settles with minimal overshoot and oscillation.
     </p>
+    
     <h2>Conclusion</h2>
     <p>This lab reinforced my understanding of PID tuning by applying it to angular control. 
         The DMP made a noticeable improvement in yaw stability over using raw gyroscope integration. 
