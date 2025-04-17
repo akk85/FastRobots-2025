@@ -51,9 +51,9 @@
             animation: fadeInRight 1s ease-out;
         }
         p {
-            margin: 15px 0;
-            color: #666;
-            font-size: 1.1em;
+            margin: 10px 0;
+            color: #121111;
+            font-size: 1.0em;
         }
         img {
             max-width: 80%;
@@ -167,6 +167,23 @@
             transform: scale(1.02);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
+
+
+        .code-c {
+            background-color: #f9f9f9;
+            color: #2c3e50;
+            padding: 16px;
+            border-left: 4px solid #3498db;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.6;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        }
+
+
 
         /* Animations */
         @keyframes fadeIn {
@@ -321,67 +338,221 @@
                 cursor: zoom-out !important;
             }`;
         document.head.appendChild(styles);
+        <code>step_response()</code>
     </script>
 </head>
 <body>
-    <h1>Lab 7: Kalman Filter for Distance Estimation</h1>
-    <h2> Objective</h2>
-    <p>
-        The goal of this lab was to implement a Kalman Filter to estimate the position and velocity of the RC car using noisy ToF sensor readings. 
-        The Kalman Filter serves to improve upon the linear extrapolation method previously used in Lab 5 by providing more accurate and smoother state estimates for high-speed wall-approach scenarios.
-    </p>
-    <h2>Prelab</h2>
-    <p>
-        In Lab 5, I used a ToF sensor with a 20 ms timing budget, yielding a sampling rate of 50 Hz. However, the PID loop ran at ~280 Hz, creating significant gaps in sensor readings. I bridged this gap using linear extrapolation. 
-        In this lab, I replaced that method with a Kalman Filter to perform real-time state estimation, fusing ToF distance measurements with a physics-based model of the robot’s motion.
-        The Kalman Filter is especially useful here due to its ability to combine noisy sensor data and a predictive model to estimate hidden variables like velocity, which is not directly measured.
-    </p>
+    <div class="section-container">
+        <h1>Lab 7: Kalman Filter for Distance Estimation</h1>
 
-    <h2>Task 1: Estimating Drag and Momentum</h2>
-<p>
-    To begin implementing the Kalman Filter, I derived a dynamic model for the RC car’s motion using Newton’s Second Law, accounting for drag:
-</p>
-<div class="equation">
-    F = m·a = u - d·v
-</div>
+        <h2>Objective</h2>
+        <p>
+            The goal of this lab was to implement a Kalman Filter on the Artemis board to estimate the robot's velocity and position in real time using a Time-of-Flight (ToF) sensor. I aimed to command the robot to move toward a wall and stop at a target distance using a PD controller, relying solely on sensor feedback and onboard estimation.
+        </p>
 
-<p>
-    where <code>u</code> is the motor input (force), <code>d</code> is the drag coefficient, <code>v</code> is velocity, and <code>m</code> is the effective mass. I represented the system state as:
-</p>
+        <h2>Step 1: Step Response Implementation on Arduino</h2>
+        <p>
+            To analyze the robot’s dynamic response to a step input, I implemented a <code>step_response()</code> function that commands the motors to apply a step PWM input of 100 while logging ToF-based distance measurements and computing velocity. This allowed me to characterize how the robot accelerates and moves in response to a known control input.        </p>
 
-<div class="equation">
-    x = [position; velocity]
-</div>
+        <h4>Boolean Flag Control</h4>
+        <p>
+            To trigger and stop the step response routine over BLE, I introduced a <code>is_step_response</code> flag to toggle logging based on BLE commands. 
+            The <code>START_STEP</code> command sets it to true, and <code>STOP_STEP</code> resets it along with other logging variables.
+            This approach makes it easy to run the experiment on demand without needing to reflash the board.
+        </p>
+        
 
-<p>
-    From this, the continuous-time state-space model becomes:
-</p>
+        <h3>(i)Step Response Control Routine</h3>
+        <p>
+            The <code>step_response_control()</code> function executes the experiment in three phases: an idle phase (0 PWM), an active phase (100 PWM for 3s), and a final stop phase (0 PWM again). This structure captures the full acceleration-deceleration profile.
+        </p>
 
-<div class="equation">
-    ẋ = A·x + B·u
-</div>
-<div class="equation">
-    A = [[0, 1], [0, -d/m]]
-</div>
-<div class="equation">
-    B = [[0], [1/m]]
-</div>
+            <img src="labs_img/Step_Response_Control _Routine.png" alt="Step Response Control Routine">
+
+        <h3>(ii)Step Response Logging Function</h3>
+        <p>
+            Inside <code>step_response()</code>, I drove motors at a constant PWM in a straight line towards a pillowed wall, read ToF distance measurements and then
+            logged time, PWM, distance, and velocity to arrays.
+        </p>
+        <img src="labs_img/Step_Response_Logging.png" alt="Step Response Control Routine">
+
+        <P>
+            This structure ensures that the robot's full response curve — from rest to steady-state — is well logged.
+        </P>
+
+        <h3>(iii)Step Response Data Collection via BLE</h3>
+        <p>
+            To trigger logging data from the robot, I implemeted three BLE commands. <code>START_STEP</code>, <code>STOP_STEP</code> which get's automatically 
+            triggered by the is_step_response flag and a <code>COLLECT_DATA</code> to receive all data samples (Distance, Velocity and PWM for plotting)
+        </p>
+
+        <p>
+            Each BLE packet contained <code>time|pwm|distance|velocity</code> which was parsed and stored.
+        </p>
+        <div class="two-image-container">
+            <img src="labs_img/start_step_cmd.png" alt="YAW DATA">
+            <img src="labs_img/collect_data_cmd.png" alt="Python BLE Notification Handler">
+        </div>
+
+        <h2>Step 2: Estimating Momentum and Drag</h2>
+        <p>To tune the Kalman filter model, I needed to estimate the robot's mass-like parameter (momentum term <span class="equation">m</span>) and its damping resistance to motion (drag <span class="equation">d</span>). I assumed a first-order model of the form:</p>
+        <p class="equation">v̇(t) = <span class="fraction"><span class="numerator">1</span><span class="denominator">m</span></span>u - <span class="fraction"><span class="numerator">d</span><span class="denominator">m</span></span>v(t)</p>
+        <p>Solving this differential equation gives an exponential velocity curve:</p>
+
+        <div class="equation">
+            <strong>v(t) = v<sub>ss</sub> · (1 − e<sup>−t/τ</sup>)</strong>
+        </div>
+
+        <p class="note">Where:
+        <ul class="note">
+            <span class="equation">v_ss = <span class="fraction"><span class="numerator">u</span><span class="denominator">d</span></span></span> is the steady-state velocity and 
+            <span class="equation">τ = <span class="fraction"><span class="numerator">m</span><span class="denominator">d</span></span></span> is the time constant.
+        </ul>
+        
+        
+
+       <h4>
+        Find Steady-State Velocity and time constant 
+       </h4> 
+
+       <img src="labs_img/step_response_datas.png" alt="YAW DATA">
+       <p>
+        From the velocity plot, I identified a region where the velocity plateaued — between <strong>2.5s</strong> and <strong>3.0s</strong>.
+        This gave us the estimated steady-state velocity:
+        </p>
+        
+            <div class="equation">
+                <strong>v<sub>ss</sub> ≈ 552.92 mm/s</strong>
+            </div>
+            <p>
+                To estimate the time constant <strong>τ</strong>, I first computed the time <strong>t<sub>0.9</sub></strong> when the velocity first reached 90% of the steady-state velocity. This tells us how fast the robot approaches its final velocity.
+            </p>
+            
+            <p>
+                I found:
+            </p>
+            <div class="equation">
+                <strong>t<sub>0.9</sub> ≈ 1.58 seconds</strong>
+            </div>
+            
+            <p>
+                For a first-order exponential system:
+            </p>
+            
+            <div class="equation">
+                <strong>t<sub>0.9</sub> ≈ 2.3 × τ ⇒ τ ≈ t<sub>0.9</sub> / 2.3 ≈ 0.687 s</strong>
+            </div>
+            
+            <h4>Solving for Drag (d) and Momentum (m)</h4>
+            <p>
+                Using the standard model:
+            </p>
+            
+            <div class="equation">
+                <strong>v<sub>ss</sub> = u / d ⇒ d = u / v<sub>ss</sub></strong>
+            </div>
+            
+            <div class="equation">
+                <strong>τ = m / d ⇒ m = τ × d</strong>
+            </div>
+            
+            <p>
+                With values:
+                <ul>
+                    <li><strong>u</strong> = 100 (PWM input), 
+                    <strong>v<sub>ss</sub></strong> = 552.92 mm/s and 
+                    <strong>τ</strong> = 0.687 s</li>
+                </ul>
+            </p>
+            
+            <pre><code>d = 100 / 552.92   # ≈ 0.1809
+m = 0.687 * d      # ≈ 0.1245 </code></pre>
+            <p>
+                These parameters were then used in the Kalman filter matrices for real-time estimation and control.
+            </p>
 
 
-<h3>Step Response Experiment</h3>
-<p>
-    I performed a step input test using a constant PWM of 100% to drive the car forward while logging ToF sensor readings and timestamps. To prevent collisions, I applied active braking when the car approached within 1 meter of the wall.
-</p>
+        <h2>Step 3: Offline Kalman Filter Simulation</h2>
+        
+        <p>
+            Using the calculated <b>d</b> and <b>m</b> values, 
+            I modeled the robot’s dynamics and built a simulation of the Kalman filter in Python. The idea was to confirm that our estimator could track position and velocity closely even with noisy measurements — before deploying it live on the robot.
+        </p>
+        
 
-<div class="two-image-container">
-    <img src="labs_img/step_response.png" alt="IMU on Robot Setup">
-</div>
-<p>
-    After the run, I sent the data over BLE and saved it as a .
-</p>
+        <h4>System Model </h4>
+        <p>I modeled the robot as a second-order linear system where: <p>
 
 
-  
+        <img src="labs_img/model.png" alt="YAW DATA">
 
-</body>
-</html>
+            <p>
+                I plotted two key components (i) Position - True vs Measured (with noise) vs Estimated (Kalman filter) and (ii) Velocity - True vs Estimated
+            </p>
+
+        <img src="labs_img/kalman_filter_simulation.png" alt="YAW DATA">
+
+        <p>
+            The result showed that our Kalman filter effectively smoothed the position and velocity, matching the underlying motion even in the presence of measurement noise.
+        Our simulated Kalman filter tracked both position and velocity with high fidelity. This gave me confidence to move forward and deploy the estimator on my Artemis board. I therefore used the exact same matrices A, B, H, Q, and R in my Arduino code.
+        </p>
+
+
+
+        <h2>Step 4: Real-Time Kalman Filter on Robot</h2>
+        <p>
+            After validating the filter offline, I then went ahead to implement it on my robot car and used it for real-time state estimation onboard the robot.
+             I did this with the use of two functions , <code>kalman_update()</code> which contained the filter logic implementation which would get triggered inside <code>drive_until_target()</code> whenever new sensor data was available.
+        </p>
+
+        <img src="labs_img/drive_until_target.png" alt="YAW DATA">
+        This estimator is called inside drive_until_target() every time new ToF data is ready. 
+        <pre class="code-c"> <code> y = z_meas - (H[0]*x_pred[0] + H[1]*x_pred[1]);
+  K[0] = ...; // Kalman Gain
+  x_est[0] = x_pred[0] + K[0]*y;
+  x_est[1] = x_pred[1] + K[1]*y; </code> </pre>
+
+
+
+        <h4>PD Controller for Target-Based Driving</h4>
+        <p>
+            I also implemented a Proportional-Derivative (PD) controller that uses the Kalman filter estimates to compute motor PWM values. 
+            The controller helps the robot slow down as it approaches a predefined target distance (30 cm) and stop smoothly. I added a new command that allowed me 
+            to tune the controller remotely via BLE without having to burn arduino code everytime saving me a huge amount of time. I settled on kp of 2.5 and kd of 0.7.
+        </p>
+
+
+        <img src="labs_img/python_set_pd.png" alt="Python BLE Notification Handler">
+
+        <p>
+            This PD controller ensures that, te robot speeds up when far from the wall, decelerates as it nears the target, and halts automatically when the distance error or PWM falls below the set threshold.
+        </p>
+
+        <h4>
+            Boolean is_kalman_drive
+        </h4>
+        <p>
+            To control when the Kalman filter-based driving was active, I added a flag <code>is_kalman_drive</code> that gets set via BLE command. This flag ensures the filter and controller only run when explicitly requested, 
+            and automatically stops the robot when reaching the target distance.
+            When this flag is set to true, the robot uses its Kalman filter estimates to drive towards the target. When false, or when the target is reached, the robot stops and the filter resets.
+        </p>
+        <img src="labs_img/DRIVE_TO_TARGET_CMD.png" alt="Python BLE Notification Handler">
+        <p>
+            On the Python side, I used a BLE notification handler to collect this stream of position and velocity estimates over time.
+            I logged timestamps and plotted both <strong>estimated position</strong> and <strong>estimated velocity</strong> to evaluate the Kalman filter’s live performance.    
+        </p>
+        <img src="labs_img/filter_arduino_results.png" alt="Kalman Filter Estimating Robot Velocity">
+
+        <p class="note"> This result demonstrates that the Kalman filter estimates velocity in real time with high accuracy, even as the robot slows down before reaching the target distance.</p>
+
+        <h2>Conclusion</h2>
+        <p>
+            Lab 7 was an exciting opportunity to bring a Kalman filter to life on a real robot. By estimating the robot’s velocity and position in real time, I was able to enhance the raw ToF sensor data and improve overall motion control. Beyond just implementation, this lab deepened my understanding of how Kalman filters work and why they’re so powerful for robotics and sensor fusion.
+        </p>
+        <p>
+            <strong>[1]</strong> Huge thanks to Stephan Wagner (2024) for the inspiration and helpful documentation throughout this process.
+        </p>
+        
+    </body>
+    </html>
+    

@@ -51,9 +51,9 @@
             animation: fadeInRight 1s ease-out;
         }
         p {
-            margin: 15px 0;
-            color: #666;
-            font-size: 1.1em;
+            margin: 10px 0;
+            color: #121111;
+            font-size: 1.0em;
         }
         img {
             max-width: 80%;
@@ -318,6 +318,7 @@
     </script>
 </head>
 <body>
+    <div class="section-container">
     <h1>Lab 6: Orientation PID Control with IMU</h1>
 
     <h2>Overview</h2>
@@ -385,33 +386,38 @@
     <div class="two-image-container">
         <img src="labs_img/yaw_full_pid.png" alt="Yaw with full PID">
     </div>
+
     <p>The final values I settled on were: <strong>Kp = 1.8</strong>, <strong>Ki = 0.02</strong>, <strong>Kd = 0.3</strong>. These produced a smooth curve with no sustained oscillation, moderate speed, and quick recovery from disturbances.</p>
-    <div class="two-image-container">
+    
     <img src="labs_img/python_yaw_full_pid.png" alt="Yaw with full PID">
-    <div>
 
 
     <p>
         As shown in the plot below, the yaw angle initially overshoots due to a large control effort before stabilizing near the target. The PWM signal adjusts dynamically to minimize the yaw error, demonstrating a responsive and functional PID controller.
     </p>
 
-    <div class="two-image-container">
-        <img src="labs_img/lab6_yaw_plot.png" alt="Yaw with full PID">
-        <div>
-    <p><iframe width="560" height="315" src="https://youtube.com/embed/SS-XCyFzllg" title="Yaw PID Demo" frameborder="0" allowfullscreen></iframe></p>
+    <img src="labs_img/lab6_yaw_plot.png" alt="Yaw with full PID">
+
+
     <p>
         The video below shows the robot executing the yaw PID controller using the final tuned values of 
         <strong>Kp = 1.8</strong>, <strong>Ki = 0.02</strong>, and <strong>Kd = 0.3</strong>. 
         The robot rotates toward the 90° setpoint and settles with minimal overshoot and oscillation.
     </p>
+
+    <iframe width="560" height="315" src="https://youtube.com/embed/SS-XCyFzllg" title="Yaw PID Demo" frameborder="0" allowfullscreen></iframe>
+    
+
     
     <h2>Conclusion</h2>
     <p>This lab reinforced my understanding of PID tuning by applying it to angular control. 
         The DMP made a noticeable improvement in yaw stability over using raw gyroscope integration. 
         The ability to update setpoints over BLE allowed for quick iterations, and the final controller was responsive and robust. 
         Minor mechanical adjustments, such as reducing wheel friction, also helped improve the quality of turning.
-
     </p>
-
+    <p>
+        <strong>[1]</strong> Huge thanks to Stephan Wagner (2024) for the inspiration and helpful documentation throughout this process.
+    </p>
+    </div>
 </body>
 </html>
