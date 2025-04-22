@@ -3,10 +3,657 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 10 Placeholder</title>
+    <title>Lab 10: Grid Localization with Bayes Filter</title>
+</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2.5em;
+            animation: fadeInDown 1s ease-out;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 12px;
+            margin-top: 35px;
+            font-size: 1.8em;
+            animation: fadeInLeft 1s ease-out;
+        }
+        h3 {
+            color: #4a7c8c;
+            margin-top: 25px;
+            font-size: 1.5em;
+            animation: fadeInRight 1s ease-out;
+        }
+        p {
+            margin: 10px 0;
+            color: #121111;
+            font-size: 1.0em;
+        }
+        img {
+            max-width: 80%;
+            max-height: 500px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.05);
+            opacity: 0.95;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            color: #555;
+            transition: background-color 0.3s ease;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        td:hover {
+            background-color: #f0f0f0;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        pre:hover {
+            transform: scale(1.02);
+        }
+        .placeholder {
+            color: #888;
+            font-style: italic;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        .placeholder:hover {
+            opacity: 1;
+        }
+        /* Image Containers */
+        .image-container, .two-image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+        }
+        .image-container:hover, .two-image-container:hover {
+            transform: scale(1.02);
+        }
+        .image-container img, .two-image-container img {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            max-width: 30%; /* Fits three images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .two-image-container img {
+            max-width: 48%; /* Fits two images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            max-width: 80%;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        iframe:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1200px) {
+            .section-container { max-width: 95%; padding: 15px; }
+            img, iframe { max-width: 90%; max-height: 400px; }
+            .image-container img, .two-image-container img { max-width: 45%; }
+            table { width: 95%; }
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.6em; }
+            h3 { font-size: 1.3em; }
+        }
+        @media (max-width: 768px) {
+            .section-container { max-width: 90%; padding: 10px; }
+            img, iframe { max-width: 100%; max-height: 250px; }
+            .image-container img, .two-image-container img { max-width: 100%; }
+            table { width: 100%; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.1em; }
+            p { font-size: 1em; }
+        }
+        @media (max-width: 480px) {
+            .section-container { padding: 5px; }
+            img, iframe { max-height: 200px; }
+            pre { font-size: 0.8em; padding: 10px; }
+            table { font-size: 0.9em; }
+            button { padding: 8px 15px; font-size: 0.9em; }
+        }
+    </style>
+    <script>
+        // Smooth scrolling for navigation (if needed, add links later)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Image lazy loading with animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.image-container img, .two-image-container img');
+            images.forEach(img => {
+                img.style.opacity = '0';
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.animation = 'fadeIn 1s ease-out forwards';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '50px' });
+                observer.observe(img);
+            });
+        });
+
+        // Dynamic table toggle for sensor data (not used here, kept for consistency)
+        function toggleTable() {
+            const table = document.querySelector('table');
+            if (table) {
+                if (table.style.display === 'none' || table.style.display === '') {
+                    table.style.display = 'table';
+                    table.style.animation = 'fadeIn 0.5s ease-out';
+                } else {
+                    table.style.animation = 'fadeOut 0.5s ease-out';
+                    setTimeout(() => table.style.display = 'none', 500);
+                }
+            }
+        }
+
+        // Image zoom on click
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('click', function() {
+                this.classList.toggle('enlarged');
+                if (this.classList.contains('enlarged')) {
+                    this.style.maxWidth = '90%';
+                    this.style.maxHeight = '80vh';
+                    this.style.position = 'fixed';
+                    this.style.top = '50%';
+                    this.style.left = '50%';
+                    this.style.transform = 'translate(-50%, -50%)';
+                    this.style.zIndex = '1000';
+                    this.style.cursor = 'zoom-out';
+                } else {
+                    this.style.maxWidth = '80%';
+                    this.style.maxHeight = '500px';
+                    this.style.position = 'static';
+                    this.style.top = 'auto';
+                    this.style.left = 'auto';
+                    this.style.transform = 'none';
+                    this.style.zIndex = 'auto';
+                    this.style.cursor = 'default';
+                }
+            });
+        });
+
+        // Fade animations for sections
+        document.querySelectorAll('h1, h2, h3, p').forEach(element => {
+            element.style.opacity = '0';
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.animation = 'fadeIn 1s ease-out';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(element);
+        });
+
+        // CSS animations for fadeOut
+        const styles = document.createElement('style');
+        styles.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .enlarged {
+                max-width: 90% !important;
+                max-height: 80vh !important;
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 1000 !important;
+                cursor: zoom-out !important;
+            }`;
+        document.head.appendChild(styles);
+    </script>
+    <!-- MathJax for rendering LaTeX equations -->
+    <script>
+        window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+        svg: { fontCache: 'global' }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
-    <h1>Lab 10: Placeholder</h1>
-    <p>This is a placeholder for Lab 10 content.</p>
+    <div class="section-container">
+    <h1>Lab 10 Report — Grid Localization using Bayes Filter</h1>
+
+    <h2>Objective</h2>
+    <p>
+        The objective of this lab was to implement grid localization using the Bayes Filter framework. 
+        I used a 3D grid to estimate the robot’s pose in the map based on both odometry (motion commands) and laser scan data. 
+        The goal was for the robot to accurately track its position over time using a combination of prediction and correction steps.
+    </p>
+
+    <h2>Implementation Overview</h2>
+    <p>
+        I represented the robot’s belief over its 3D pose (x, y, θ) using a discretized grid of 12 x-cells, 9 y-cells, and 18 orientation bins (each representing 20 degrees). 
+        At every timestep, I updated the belief using two main stages: a <strong>Prediction Step</strong> (based on odometry) and an <strong>Update Step</strong> (based on sensor observations).
+        I also made sure to normalize the belief at the end of each step to avoid underflow and ensure the probabilities summed to 1. 
+    </p>
+
+ 
+    <p>
+        The motion model used the control input in the form of <code>(rot1, trans, rot2)</code>, which I computed using the robot’s odometry readings.
+        The sensor model compared real 360° laser scan readings to expected values from the map, using a Gaussian distribution to evaluate their likelihood. This algorithm is outlined in the following screenshot from Lecture 17 posted slides.
+    </p>
+
+    <img src="labs_img/Bayes_Filter_lecture_silde.png" alt="Bayes Filter">
+
+    <h3>Prediction Step (Motion Update)</h3>
+<p>
+    In the prediction step, I used the robot’s odometry to estimate its new position. 
+    This step computes the <strong>prior belief</strong> at each state before considering any new sensor readings.
+</p>
+<p>
+    The motion model was implemented across three key functions: <code>compute_control()</code>, <code>odom_motion_model()</code>, and <code>prediction_step()</code>.
+</p>
+
+<h4>compute_control()</h4>
+<p>
+    The <code>compute_control()</code> function extracts the robot's movement between two timesteps based on odometry. 
+    It calculates the relative motion as a 3-tuple:
+</p>
+
+<p style="text-align: center;">
+    $u = (\text{rot}_1,\ \text{trans},\ \text{rot}_2)$
+</p>
+
+<p>
+    where:
+    <ul>
+        <li><strong>rot<sub>1</sub></strong> is the initial rotation to align with the movement direction</li>
+        <li><strong>trans</strong> is the straight-line distance moved</li>
+        <li><strong>rot<sub>2</sub></strong> is the final rotation after translation</li>
+    </ul>
+    These values are calculated using:
+</p>
+
+
+<p style="text-align: center;">
+    $ \text{heading} = \text{atan2}(\Delta y, \Delta x) \\
+    $
+</p>
+<p style="text-align: center;">
+    $ \text{distance} = \sqrt{(\Delta x)^2 + (\Delta y)^2}  \\
+    $
+</p>
+
+<p>
+    I normalized all angles using <code>mapper.normalize_angle()</code> to ensure they stayed within the range [-180°, 180°).
+</p>
+<img src="labs_img/Compute_Control.png" alt="Compute Control">
+
+<h4>odom_motion_model()</h4>
+<p>
+    The <code>odom_motion_model()</code> function evaluates how likely it is for the robot to move from one pose to another given a control input <code>u</code>. 
+    It compares the observed motion with the actual transition and uses Gaussian probability distributions to assign a likelihood:
+</p>
+
+<p style="text-align: center;">
+    \( p(x_t \mid u_t, x_{t-1}) = \mathcal{N}(\text{rot}_1) \cdot \mathcal{N}(\text{trans}) \cdot \mathcal{N}(\text{rot}_2) \)
+  </p>
+  
+<p>
+    Each component is computed using <code>loc.gaussian()</code> with a noise parameter from <code>loc.odom_rot_sigma</code> and <code>loc.odom_trans_sigma</code>.
+</p>
+<img src="labs_img/odom_motion_model.png" alt="Odom Motion">
+
+<h4>prediction_step()</h4>
+<p>
+    The <code>prediction_step()</code> function computes the new belief distribution by looping over all possible target states and summing up their likelihood of being reached from any valid prior state:
+</p>
+<p style="text-align: center;">
+    $\overline{bel}(x_t) = \sum_{x_{t-1}} p(x_t \mid u_t, x_{t-1}) \cdot bel(x_{t-1})$
+</p>
+<p>
+    I skipped grid cells with very low prior belief (<code>&lt; 0.0001</code>) to reduce computation time. 
+    After accumulating all contributions to a cell, I normalized <code>loc.bel_bar</code> to ensure that the probabilities summed to 1.
+</p>
+<img src="labs_img/Prediction_Step.png" alt="Prediction Step">
+
+<h3>Update Step (Sensor Update)</h3>
+<p>
+    After the motion prediction, I refined the belief using the robot’s sensor readings through the <code>update_step()</code>. 
+    This step evaluates how likely each state is given the current 360° laser scan.
+</p>
+<p>
+    I compared the actual sensor data (<code>loc.obs_range_data</code>) to the expected scan at each grid state, retrieved using <code>mapper.get_views()</code>. 
+    The likelihood of a state was then computed using the product of 18 Gaussian probabilities:
+</p>
+
+<p style="text-align: center;">
+    $p(z_t \mid x_t) = \prod_{i=1}^{18} \mathcal{N}(z_i - \hat{z}_i(x_t), \sigma^2)$
+</p>
+<p>
+    This assumes each individual laser beam is conditionally independent given the robot’s pose.
+</p>
+
+<h4>update_step()</h4>
+<p>
+    I multiplied this likelihood by the predicted belief from the motion model and normalized the result:
+</p>
+<p style="text-align: center;">
+    $bel(x_t) = \eta \cdot p(z_t \mid x_t) \cdot \overline{bel}(x_t)$
+</p>
+<ul>
+    <li><code>η</code> is a normalization constant</li>
+    <li>The Gaussian noise parameter <code>σ</code> comes from <code>loc.sensor_sigma</code></li>
+</ul>
+<p>
+    I implemented this step using NumPy vector operations for efficiency, with <code>np.prod()</code> handling the beam likelihoods across the 18 dimensions.
+</p>
+<img src="labs_img/Update_Step.png" alt="Update Step">
+
+<h4>Sensor Model</h4>
+<p>
+    Although I inlined most of the likelihood computation directly into <code>update_step()</code>, I also tested a standalone version using <code>sensor_model(obs)</code> for modularity. 
+    This function returns a vector of 18 probabilities corresponding to each beam, and helps test individual measurements more easily.
+</p>
+<img src="labs_img/sensor_model.png" alt="Sensor Model">
+
+<h2>Evaluation (Data Loging)</h2>
+
+<p>
+    I used the top-level loop provided in the notebook to implement the Bayes Filter algorithm. 
+    In each iteration of the loop, the robot takes a step along its predefined trajectory, performs a prediction step 
+    based on odometry, then gathers sensor measurements and performs an update step to refine its belief.
+</p>
+
+
+<img src="labs_img/top_level_loop.png" alt="top_level_loop">
+<p>
+    To evaluate how well my Bayes Filter was performing, I implemented two helper functions:
+    <code>log_localization_step()</code> and <code>save_localization_log()</code>.
+</p>
+
+<h4>log_localization_step()</h4>
+<p>
+    This function runs during each iteration of the loop and logs key data:
+</p>
+<ul>
+    <li>The ground truth pose (from the simulator)</li>
+    <li>The most likely belief pose (based on the belief distribution)</li>
+    <li>The probability of that belief</li>
+    <li>The Euclidean error between the belief and the ground truth</li>
+</ul>
+<p>
+    All of this information is stored in a global list called <code>log_data</code> and used for further analysis.
+</p>
+<img src="labs_img/log_localization.png" alt="log_localization_step function">
+
+<h4>save_localization_log()</h4>
+<p>
+    After the run is complete, I use <code>save_localization_log()</code> to flatten the collected data and save it into a CSV file. 
+    This makes it easy to plot error over time, compare trajectories, or analyze belief probabilities step-by-step.
+</p>
+<img src="labs_img/save_localization.png" alt="save_localization_log function">
+
+<p>
+    These functions allowed me to build a detailed snapshot of my robot’s performance across the full trajectory.
+    In the next section, I use this data to visualize and interpret the results.
+</p>
+
+
+<h2>Evaluation (Result Analysis)</h2>
+
+<p>
+    I evaluated my Bayes Filter implementation by logging the robot’s ground truth pose, the most likely belief pose, its probability, 
+    and the localization error at every step along the trajectory. This was done using the functions 
+    <code>log_localization_step()</code> and <code>save_localization_log()</code>.
+</p>
+<p>
+    I then used this data to generate two plots that visualize the accuracy and consistency of localization over time.
+</p>
+
+<h4>1. Localization Error Over Time</h4>
+<p>
+    This plot shows how the Euclidean error between the belief and the ground truth changes over each step. 
+    The error remained fairly low and consistent, demonstrating that the robot's belief tracked its actual position well.
+</p>
+<img src="labs_img/EuclidianError.png" alt="Error Over Time">
+
+<h4>2. Ground Truth vs Belief Trajectory</h4>
+<p>
+    This X-Y plot compares the path estimated by the filter against the actual path taken by the robot. 
+    The belief trajectory (orange) stays close to the ground truth (blue), confirming that the filter was accurately fusing odometry and sensor updates.
+</p>
+<img src="labs_img/GroundTruthvsGroundBelief.png" alt="Ground Truth vs Belief Trajectory">
+
+<h2>Simulation and Demo</h2>
+
+<h4>Odometry Without Bayes Filter</h4>
+<p>
+    Before applying the Bayes Filter, I ran the trajectory using just odometry. As seen below, the red path (odometry) diverges significantly 
+    from the green path (ground truth), especially as the robot moves further along the trajectory. This is a clear illustration of 
+    how unreliable dead reckoning alone can be over time.
+</p>
+<img src="labs_img/Without_Bayes.png" alt="Odometry Only — Without Bayes Filter">
+
+<h4>Localization With Bayes Filter</h4>
+<p>
+    With the Bayes Filter implemented, I ran the same trajectory twice to test consistency. 
+    In both runs, the belief state (shown in blue) stays closely aligned with the ground truth (green), 
+    while the odometry (red) still drifts. This shows the filter effectively corrects the pose estimate 
+    by fusing motion and sensor data.
+</p>
+<p>
+    You can click the videos below to view both trials side by side. The belief estimate clearly tracks the correct position, 
+    especially after rotations or noisy movements. The simulator also shows confidence (probabilities near 1.0), which suggests 
+    the sensor model and update step are working well.
+</p>
+
+<div class="two-image-container">
+    <div style="text-align: center;">
+      <iframe width="480" height="270" src="https://www.youtube.com/embed/jAc_jJU0OMQ" 
+              title="Bayes Filter Run 1" frameborder="0" allowfullscreen></iframe>
+      <p style="font-style: italic; color: #555; margin-top: 8px;">Run 1 — Localization with Bayes Filter</p>
+    </div>
+  
+    <div style="text-align: center;">
+      <iframe width="480" height="270" src="https://www.youtube.com/embed/7w4r1Hte9Mg" 
+              title="Bayes Filter Run 2" frameborder="0" allowfullscreen></iframe>
+      <p style="font-style: italic; color: #555; margin-top: 8px;">Run 2 — Localization with Bayes Filter</p>
+    </div>
+  </div>
+  
+
+
+
+<h3>Run 1 Sample Data</h3>
+<p>
+  You can download the full CSV log here: 
+  <a href="localization_log.csv" download style="color:#3498db; text-decoration: underline;">
+    📄 localization_log.csv
+  </a>
+</p>
+
+<table style="
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: #ccd8bf;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(140, 127, 127, 0.1);
+    font-size: 0.95em;">
+<thead style="background-color: #25292e; color: #ffffff;">
+    <tr>
+      <th style="padding: 12px;">Step</th>
+      <th style="padding: 12px;">Ground Truth State</th>
+      <th style="padding: 12px;">Belief State</th>
+      <th style="padding: 12px;">Belief Probability</th>
+      <th style="padding: 12px;">Error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="padding: 10px; text-align:center;">0</td>
+      <td style="padding: 10px; text-align:center;">(0.28, -0.09, 320.6°)</td>
+      <td style="padding: 10px; text-align:center;">(0.31, 0.00, -50.0°)</td>
+      <td style="padding: 10px; text-align:center;">0.999999</td>
+      <td style="padding: 10px; text-align:center;">0.09 m</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; text-align:center;">1</td>
+      <td style="padding: 10px; text-align:center;">(0.52, -0.52, 657.6°)</td>
+      <td style="padding: 10px; text-align:center;">(0.31, -0.61, -70.0°)</td>
+      <td style="padding: 10px; text-align:center;">1.000000</td>
+      <td style="padding: 10px; text-align:center;">0.21 m</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; text-align:center;">2</td>
+      <td style="padding: 10px; text-align:center;">(0.52, -0.52, 995.1°)</td>
+      <td style="padding: 10px; text-align:center;">(0.31, -0.61, -90.0°)</td>
+      <td style="padding: 10px; text-align:center;">1.000000</td>
+      <td style="padding: 10px; text-align:center;">0.21 m</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; text-align:center;">3</td>
+      <td style="padding: 10px; text-align:center;">(0.55, -0.92, 1355.1°)</td>
+      <td style="padding: 10px; text-align:center;">(0.61, -0.91, -90.0°)</td>
+      <td style="padding: 10px; text-align:center;">1.000000</td>
+      <td style="padding: 10px; text-align:center;">0.06 m</td>
+    </tr>
+    <tr>
+      <td style="padding: 10px; text-align:center;">4</td>
+      <td style="padding: 10px; text-align:center;">(0.81, -1.05, 1802.0°)</td>
+      <td style="padding: 10px; text-align:center;">(0.91, -0.91, 10.0°)</td>
+      <td style="padding: 10px; text-align:center;">1.000000</td>
+      <td style="padding: 10px; text-align:center;">0.17 m</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<h2>Conclusion</h2>
+<p>
+    This lab helped me understand how probabilistic localization works in practice. 
+    By combining motion and sensor models in a Bayes Filter, I was able to track the robot’s pose 
+    with much higher accuracy than using odometry alone.
+</p>
+<p>
+    The belief estimates followed the ground truth closely across both runs, and the filter 
+    handled noise and drift well. Overall, this was a solid introduction to real-time localization.
+</p>
+<p>
+    <strong>[1]</strong> Huge thanks to Stephan Wagner (2024) for the inspiration and helpful documentation throughout this process.
+</p>
+
+
 </body>
 </html>
