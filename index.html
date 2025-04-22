@@ -70,16 +70,25 @@
   </header>
 
   <main class="main">
-
-    <!-- Bio Section -->
+      <!-- Bio Section -->
     <section id="about" class="about section">
       <div class="container section-title" data-aos="fade-up">
-        <h2>Bio</h2>
+        <h2>About Me</h2>
         <p>Welcome to my website for ECE 4160: Fast Robots. Here, you will find write-ups for each lab and a brief introduction of who I am.</p>
-        <p>My name is Tony Kariuki. I'm an undergraduate senior majoring in Electrical and Computer Engineering with a minor in Computer Science, and I'm super stoked about this class. For more about my projects and professional background, please visit my <a href="https://www.tonykariuki.com/" target="_blank" rel="noopener">personal website</a>.</p>
+        
+        <p>I'm <strong>Tony Kariuki</strong>, a senior majoring in Electrical and Computer Engineering with a minor in Computer Science. I'm passionate about building intelligent systems that blend hardware with software—and Fast Robots has been the perfect playground for that.</p>
+    
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          <a href="https://www.tonykariuki.com/" class="btn btn-primary" target="_blank" rel="noopener">
+            🌐 Personal Website
+          </a>
+          <a href="https://github.com/akk85" class="btn btn-outline-dark" target="_blank" rel="noopener">
+            💻 GitHub Profile
+          </a>
+        </div>
       </div>
     </section>
-
+    
     <!-- Portfolio Section -->
     <section id="portfolio" class="portfolio section light-background">
       <div class="container section-title" data-aos="fade-up">
@@ -243,7 +252,7 @@
         </div>
 
         <!-- Pagination -->
-        <nav class="mt-3" id="labPagination">
+        <!-- <nav class="mt-3" id="labPagination">
           <ul class="pagination pagination-sm justify-content-center">
             <li class="page-item"><a class="page-link" href="#" id="prevPage">Previous</a></li>
             <li class="page-item"><span class="page-link" id="currentPage">Page 1</span></li>
@@ -251,7 +260,7 @@
           </ul>
         </nav>
       </div>
-    </section>
+    </section> -->
 
   </main>
 
@@ -286,68 +295,24 @@
 
   
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const LABS_PER_PAGE = 8;
-    let currentPage = 1;
-    let totalPages = 1;
-    const allLabs = Array.from(document.querySelectorAll('.lab-card'));
-    let filteredLabs = [...allLabs]; // Copy of all labs for filtering
-    const pagination = document.getElementById('labPagination');
-  
-    // Initialize all labs as hidden
-    allLabs.forEach(lab => lab.parentElement.style.display = 'none');
-  
-    function updateDisplay() {
-      // Calculate visible range
-      const startIndex = (currentPage - 1) * LABS_PER_PAGE;
-      const endIndex = startIndex + LABS_PER_PAGE;
-      
-      // Hide all labs first
-      allLabs.forEach(lab => lab.parentElement.style.display = 'none');
-      
-      // Show only current page's labs
-      filteredLabs.slice(startIndex, endIndex).forEach(lab => {
+    document.addEventListener('DOMContentLoaded', () => {
+      const allLabs = Array.from(document.querySelectorAll('.lab-card'));
+    
+      // Show all labs by default
+      allLabs.forEach(lab => {
         lab.parentElement.style.display = 'block';
       });
-  
-      // Update pagination controls
-      totalPages = Math.ceil(filteredLabs.length / LABS_PER_PAGE);
-      document.getElementById('currentPage').textContent = `Page ${currentPage}`;
-      document.getElementById('prevPage').parentElement.classList.toggle('disabled', currentPage === 1);
-      document.getElementById('nextPage').parentElement.classList.toggle('disabled', currentPage >= totalPages);
-      pagination.style.display = totalPages > 1 ? 'block' : 'none';
-    }
-  
-    // Search functionality
-    document.getElementById('labSearch').addEventListener('input', (e) => {
-      const term = e.target.value.toLowerCase();
-      filteredLabs = allLabs.filter(lab => 
-        lab.dataset.search.toLowerCase().includes(term)
-      );
-      currentPage = 1;
-      updateDisplay();
+    
+      // Simple search function
+      document.getElementById('labSearch').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        allLabs.forEach(lab => {
+          const match = lab.dataset.search.toLowerCase().includes(term);
+          lab.parentElement.style.display = match ? 'block' : 'none';
+        });
+      });
     });
-  
-    // Pagination controls
-    document.getElementById('prevPage').addEventListener('click', (e) => {
-      e.preventDefault();
-      if(currentPage > 1) {
-        currentPage--;
-        updateDisplay();
-      }
-    });
-  
-    document.getElementById('nextPage').addEventListener('click', (e) => {
-      e.preventDefault();
-      if(currentPage < totalPages) {
-        currentPage++;
-        updateDisplay();
-      }
-    });
-  
-    // Initial display
-    updateDisplay();
-  });
-  </script>
+    </script>
+    
 </body>
 </html>
