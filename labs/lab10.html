@@ -423,7 +423,7 @@
     I skipped grid cells with very low prior belief (<code>&lt; 0.0001</code>) to reduce computation time. 
     After accumulating all contributions to a cell, I normalized <code>loc.bel_bar</code> to ensure that the probabilities summed to 1.
 </p>
-<img src="labs_img/Prediction_Step.png" alt="Prediction Step">
+<img src="labs_img/prediction.png" alt="Prediction Step">
 
 <h3>Update Step (Sensor Update)</h3>
 <p>
@@ -456,7 +456,7 @@
 <p>
     I implemented this step using NumPy vector operations for efficiency, with <code>np.prod()</code> handling the beam likelihoods across the 18 dimensions.
 </p>
-<img src="labs_img/Update_Step.png" alt="Update Step">
+<img src="labs_img/updated.png" alt="Update Step">
 
 <h4>Sensor Model</h4>
 <p>
