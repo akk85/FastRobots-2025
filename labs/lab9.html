@@ -132,24 +132,26 @@
         .image-container:hover, .two-image-container:hover {
             transform: scale(1.02);
         }
-        .image-container img, .two-image-container img {
+        .image-container img, .three-image-container img {
             opacity: 0;
             animation: fadeIn 1s ease-in forwards;
             max-width: 30%; /* Fits three images side by side */
-            max-height: 600px;
+            max-height: 400px;
             height: auto;
             border: 2px solid #ddd;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
         .two-image-container img {
-            max-width: 48%; /* Fits two images side by side */
-            max-height: 600px;
+            max-width: 35%; /* Fits two images side by side */
+            max-height: 400px;
             height: auto;
             border: 2px solid #ddd;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin: 20px 0 40px 0; /* top, right, bottom, left */
         }
+        
         iframe {
             max-width: 80%;
             display: block;
@@ -459,9 +461,13 @@
         <div class="two-image-container">
             <img src="labs_img/Readings at (-3,-2).png" alt="Readings at (-3,-2)">
             <img src="labs_img/Readings at (0,3).png" alt="Readings at (0,3)">
+        </div>
+
+        <div class="two-image-container">
             <img src="labs_img/Readings at (5,3).png" alt="Readings at (5,3)">
             <img src="labs_img/Readings at (5,-3).png" alt="Readings at (5,-3)">
         </div>
+
 
         <p>
             The resulting plots aligned well with expectations and comparisons with reports from past years, clearly showing shorter distances near walls and longer readings in open areas. 
