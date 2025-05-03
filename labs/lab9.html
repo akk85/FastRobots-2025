@@ -3,10 +3,571 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 9 Placeholder</title>
+    <title>Lab 9: Mapping</title>
+</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2.5em;
+            animation: fadeInDown 1s ease-out;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 12px;
+            margin-top: 35px;
+            font-size: 1.8em;
+            animation: fadeInLeft 1s ease-out;
+        }
+        h3 {
+            color: #4a7c8c;
+            margin-top: 25px;
+            font-size: 1.5em;
+            animation: fadeInRight 1s ease-out;
+        }
+        p {
+            margin: 10px 0;
+            color: #121111;
+            font-size: 1.0em;
+        }
+        img {
+            max-width: 80%;
+            max-height: 500px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.05);
+            opacity: 0.95;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            color: #555;
+            transition: background-color 0.3s ease;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        td:hover {
+            background-color: #f0f0f0;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        pre:hover {
+            transform: scale(1.02);
+        }
+        .placeholder {
+            color: #888;
+            font-style: italic;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        .placeholder:hover {
+            opacity: 1;
+        }
+        /* Image Containers */
+        .image-container, .two-image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+        }
+        .image-container:hover, .two-image-container:hover {
+            transform: scale(1.02);
+        }
+        .image-container img, .two-image-container img {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            max-width: 30%; /* Fits three images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .two-image-container img {
+            max-width: 48%; /* Fits two images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            max-width: 80%;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        iframe:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1200px) {
+            .section-container { max-width: 95%; padding: 15px; }
+            img, iframe { max-width: 90%; max-height: 400px; }
+            .image-container img, .two-image-container img { max-width: 45%; }
+            table { width: 95%; }
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.6em; }
+            h3 { font-size: 1.3em; }
+        }
+        @media (max-width: 768px) {
+            .section-container { max-width: 90%; padding: 10px; }
+            img, iframe { max-width: 100%; max-height: 250px; }
+            .image-container img, .two-image-container img { max-width: 100%; }
+            table { width: 100%; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.1em; }
+            p { font-size: 1em; }
+        }
+        @media (max-width: 480px) {
+            .section-container { padding: 5px; }
+            img, iframe { max-height: 200px; }
+            pre { font-size: 0.8em; padding: 10px; }
+            table { font-size: 0.9em; }
+            button { padding: 8px 15px; font-size: 0.9em; }
+        }
+    </style>
+    <script>
+        // Smooth scrolling for navigation (if needed, add links later)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Image lazy loading with animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.image-container img, .two-image-container img');
+            images.forEach(img => {
+                img.style.opacity = '0';
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.animation = 'fadeIn 1s ease-out forwards';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '50px' });
+                observer.observe(img);
+            });
+        });
+
+        // Dynamic table toggle for sensor data (not used here, kept for consistency)
+        function toggleTable() {
+            const table = document.querySelector('table');
+            if (table) {
+                if (table.style.display === 'none' || table.style.display === '') {
+                    table.style.display = 'table';
+                    table.style.animation = 'fadeIn 0.5s ease-out';
+                } else {
+                    table.style.animation = 'fadeOut 0.5s ease-out';
+                    setTimeout(() => table.style.display = 'none', 500);
+                }
+            }
+        }
+
+        // Image zoom on click
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('click', function() {
+                this.classList.toggle('enlarged');
+                if (this.classList.contains('enlarged')) {
+                    this.style.maxWidth = '90%';
+                    this.style.maxHeight = '80vh';
+                    this.style.position = 'fixed';
+                    this.style.top = '50%';
+                    this.style.left = '50%';
+                    this.style.transform = 'translate(-50%, -50%)';
+                    this.style.zIndex = '1000';
+                    this.style.cursor = 'zoom-out';
+                } else {
+                    this.style.maxWidth = '80%';
+                    this.style.maxHeight = '500px';
+                    this.style.position = 'static';
+                    this.style.top = 'auto';
+                    this.style.left = 'auto';
+                    this.style.transform = 'none';
+                    this.style.zIndex = 'auto';
+                    this.style.cursor = 'default';
+                }
+            });
+        });
+
+        // Fade animations for sections
+        document.querySelectorAll('h1, h2, h3, p').forEach(element => {
+            element.style.opacity = '0';
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.animation = 'fadeIn 1s ease-out';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(element);
+        });
+
+        // CSS animations for fadeOut
+        const styles = document.createElement('style');
+        styles.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .enlarged {
+                max-width: 90% !important;
+                max-height: 80vh !important;
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 1000 !important;
+                cursor: zoom-out !important;
+            }`;
+        document.head.appendChild(styles);
+    </script>
+    <!-- MathJax for rendering LaTeX equations -->
+    <script>
+        window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+        svg: { fontCache: 'global' }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
-    <h1>Lab 9: Placeholder</h1>
-    <p>This is a placeholder for Lab 9 content.</p>
+    <div class="section-container">
+        <h1>Lab 9: Mapping</h1>
+        <h2>Objective</h2>
+        <p>
+            In this lab, we set out to create a map of a known room using our robot’s onboard sensors. 
+            By collecting ToF distance readings while rotating in place at several marked positions, 
+            we were able to capture a snapshot of the surroundings from multiple angles. 
+            These readings were later merged into a single coordinate frame to build a simplified line-based map that 
+            we’ll use in future localization and navigation labs.
+        </p>
+
+        <h2> Orientation Control </h2>
+        <p>
+            To enable precise in-place rotation for my robot, I utilized the PID controller that I had implemented in a previous lab, 
+            which was based on the yaw angle computed from the ICM DMP. The DMP outputs quaternion-based orientation data, 
+            which I converted to Euler angles to extract the yaw. This yaw angle served as the feedback signal for the PID control loop,
+             which adjusted motor PWM signals to minimize heading error. The motivation for using orientation-based PID control,
+             rather than open-loop control, was to ensure that the robot could collect ToF measurements from stable and repeatable angular positions. 
+             Without this closed-loop precision, rotation would be inconsistent or prone to drift, resulting in noisy and unreliable distance readings.
+        </p>
+        <h4>
+            PID Control
+        </h4>
+        <p>
+            Below is the PID control that I had implemented in Lab 6 which I utilized to handle orientation using real-time yaw readings:
+        </p>
+
+        <img src="labs_img/pid_controller_9.png" alt="PID Controller">
+
+        <h4>
+            Mapping 
+        </h4>
+
+        <p>
+            To automate the mapping process, I added a custom DO_MAPPING command to the Artemis BLE command handler. 
+            This command triggers a full 360-degree scan of the robot's environment using the Time-of-Flight (ToF) sensor and orientation feedback from the IMU. 
+            The idea for this mapping routine was adapted directly from Stephen Wagner’s implementation, whose approach demonstrated reliable and consistent 
+            scanning behavior during incremental yaw adjustments.
+        </p>
+
+        <img src="labs_img/mapping_command.png" alt="Mapping Code">
+        <p>
+            This scanning loop repeats until the robot completes a full 360° rotation. After the scan is complete, I added a COLLECT_DATA command to collect the TOF Data.
+            The entire mapping sequence was designed to run autonomously requiring just a single BLE command to initiate, which made the testing and debugging process far more efficient.
+        </p>
+
+        <p>
+            In my Python BLE control script, I added a function to trigger this routine:
+        </p>
+
+        <img src="labs_img/start_mapping_1.png" alt="Start Mapping">
+
+        <p>
+            This allowed me to tune the sweep resolution and number of sensor readings per orientation from my computer dynamically, 
+            without recompiling my arduino code everytime.
+        </p>
+
+        <h4>
+            BLE PID Tuning and Yaw Setpoint Control
+        </h4>
+
+        <p>
+            Before implementing the mapping routine, I needed to ensure that the robot could reliably rotate to specific angles. 
+            To achieved this, I introduced a new function to dynamically tuning the PID gains and setting yaw setpoints without requiring arduino recompilation.
+            I introduced a SET_ORI_PID_VALUES BLE command that allowed me to update the PID constants over BLE. 
+            This command accepts four float parameters: proportional gain (Kp), integral gain (Ki), derivative gain (Kd), and a scaling factor (Sc). 
+            These values are parsed and stored in global PID variables, which are then used by the orientation control loop.
+             Here’s sample of the BLE Python command used for tuning:
+        </p>
+
+        <img src="labs_img/update_ori_pid.png" alt="Start Mapping">
+
+        <p>
+            Below is a short video of the robot executing the step-and-scan routine. Despite careful tuning, some noticeable drift from the original position is still present. Achieving perfect in-place rotation proved challenging
+        </p>
+        <p><iframe width="560" height="315" src="https://youtube.com/embed/jAc_jJU0OM" title="Lab Data Collection" frameborder="0" 
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+        
+        <h2>
+            Data Collection and Transformation
+        </h2>
+
+        <p>
+            Once I was confident in my orientation PID controller, I moved forward with collecting mapping data. I used the custom DO_MAPPING Bluetooth command to automate the data collection process. 
+            This command was heavily inspired by Stephen Wagner’s implementation and allowed the robot to: (1) Rotate incrementally using the yaw PID controller.
+            (2) Stop once the desired angular error was below a threshold. (3) Take multiple distance readings with the ToF sensor at each orientation.
+            (4) Log the yaw angle and associated distance.
+        </p>
+
+        <p>
+            I placed the robot at four known grid locations in the lab: 
+        </p> 
+        <li>(-3, -2)</li>
+        <li>(0, 3)</li>
+        <li>(5, 3)</li>
+        <li>(5, -3)</li>
+
+        <p>
+            For each location, I ran the DO_MAPPING command from the BLE terminal. 
+            This triggered a 360° sweep, collecting orientation-stamped ToF readings. 
+            Each dataset was sent over BLE and saved as a .csv file using my Python script.
+        </p>
+
+        <h2>
+            Polar Plot Visualization
+        </h2>
+
+        <p>
+            Before attempting any coordinate transformations or merging scans, I plotted the raw ToF data from each robot location in polar coordinates to verify that the readings made sense. 
+            This served as a quick sanity check to assess whether the robot was correctly rotating and whether the distances it recorded reflected the environment.
+        </p>
+
+        <p>
+            Each reading was visualized using the yaw angle as the angle (θ) and the ToF distance (r) as the radius. 
+            I generated separate plots for each scan location (e.g., (-3, -2), (0, 3), (5, 3), (5, -3)), and the resulting polar graphs 
+            revealed discernible shapes — such as flat segments corresponding to walls and empty regions where the sensor faced open space.
+        </p>
+
+        <p>
+            These visualizations gave me confidence that the orientation PID controller was turning the robot in consistent angular steps, 
+            The ToF sensor was providing stable, noise-resistant readings and that the robot was generally maintaining its position during the scan.
+        </p>
+
+        <p>
+            I also used this step to decide whether any scans should be re-run. Since the results were fairly clean, 
+            I kept all four initial scans and moved on to the next stage of transforming the data into the world frame.
+        </p>
+
+        <div class="two-image-container">
+            <img src="labs_img/Readings at (-3,-2).png" alt="Readings at (-3,-2)">
+            <img src="labs_img/Readings at (0,3).png" alt="Readings at (0,3)">
+            <img src="labs_img/Readings at (5,3).png" alt="Readings at (5,3)">
+            <img src="labs_img/Readings at (5,-3).png" alt="Readings at (5,-3)">
+        </div>
+
+        <p>
+            The resulting plots aligned well with expectations and comparisons with reports from past years, clearly showing shorter distances near walls and longer readings in open areas. 
+        </p>
+
+        <h2>Transformations</h2>
+        <p>
+            To merge the ToF scans into a single global map, I transformed each sensor reading from the robot’s local frame 
+            to the arena’s global reference frame. I used the standard transformation chain we learned in Lecture 2:
+        </p>
+        
+        <p style="text-align: center;">\( P_i = T_R \cdot T_{TOF} \cdot P_{TOF} \)</p>
+        
+        <p>
+            Each raw sensor point was modeled as:
+        </p>
+        <p style="text-align: center;">\( P_{TOF} = \begin{bmatrix} r \\ 0 \\ 1 \end{bmatrix} \)</p>
+        
+        <p>
+            Where \( r \) is the ToF distance measurement in millimeters, relative to the sensor frame (along the sensor's x-axis).
+            I then defined the following transformation matrices:
+        </p>
+        
+        <p>Sensor to robot body frame (since the sensor is mounted 70 mm in front of the robot center, with no rotation):</p>
+        <p style="text-align: center;">
+            \( T_{TOF} =
+            \begin{bmatrix}
+            1 & 0 & 70 \\
+            0 & 1 & 0 \\
+            0 & 0 & 1
+            \end{bmatrix} \)
+        </p>
+        
+        <p>
+            Robot body to world frame, based on the robot's known position \( (x, y) \) and yaw angle \( \theta \) (from DMP):
+        </p>
+        <p style="text-align: center;">
+            \( T_R =
+            \begin{bmatrix}
+            \cos\theta & -\sin\theta & x \\
+            \sin\theta & \cos\theta & y \\
+            0 & 0 & 1
+            \end{bmatrix} \)
+        </p>
+        
+        <p>
+            Multiplying everything out, the world-frame position of each ToF reading became:
+        </p>
+        <p style="text-align: center;">
+            \( P_i =
+            \begin{bmatrix}
+            x + (l + r)\cos\theta \\
+            y + (l + r)\sin\theta \\
+            1
+            \end{bmatrix} \)
+        </p>
+        
+        <p>
+            Where:<br>
+
+            \( l = 70 \) mm is the sensor offset, ( r ) is the raw distance from the ToF sensor, 
+            (x, y) is the robot’s position at the time of the scan, ( \theta \) is the yaw from the IMU (converted to radians). 
+
+            This approach let me accurately map each point into the global room frame, accounting for both the sensor placement 
+            and the robot’s orientation. Once transformed, these points were used to construct the merged map and eventually 
+            the line-based representation for use in simulation.
+        </p>
+        
+
+        <h2>
+            Creating the Line-Based Map
+        </h2>
+
+        <p>After transforming all my ToF data into global coordinates, I manually drew a line-based map over the merged scatter plot to approximate the actual structure of the lab environment. 
+            This was done to simplify the raw data into a clean set of boundaries and obstacles suitable for use in later localization and navigation tasks.
+        </p>
+
+        <img src="labs_img/line_based_map.png" alt="EndPoints for Lab 9">
+
+        <p>
+            I used matplotlib to overlay straight line segments on top of the mapped points. These lines represent approximate walls and obstacles in the environment. 
+            To do this, I visually estimated the main boundaries by looking at the clustering of the ToF readings and selected endpoints that best captured those edges.
+            The map includes both outer walls and one interior obstacle. I stored each line as a pair of start and end coordinates, 
+            which will be used in the simulator during the next lab. Here are the final endpoints for each segment:
+        </p>
+
+        <img src="labs_img/endpoints_data.png" alt="EndPoints for Lab 9">
+
+        <h2>
+            Conclusion
+        </h2>
+
+        <p>
+            This lab was a huge step forward in helping me understand how raw sensor data can be transformed into something meaningful and useful for navigation. 
+            By combining reliable orientation control with a consistent mapping pipeline, I was able to build a fairly accurate representation of the room using 
+            just a single ToF sensor and a series of controlled rotations. 
+
+            Overall, despite the noise and imperfections in the data, this lab demonstrated how a simple sensor setup can still produce useful environmental 
+            insight when combined with smart control and post-processing.
+        </p> 
+
+        <p>
+            <strong>[1]</strong> Huge thanks to Stephan Wagner (2024) for the inspiration and helpful documentation throughout this process.
+        </p>
+        
 </body>
 </html>
+
+
