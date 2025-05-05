@@ -3,10 +3,421 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 11 Placeholder</title>
+    <title>Lab 11: Real-World Localization</title>
+</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2.5em;
+            animation: fadeInDown 1s ease-out;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 12px;
+            margin-top: 35px;
+            font-size: 1.8em;
+            animation: fadeInLeft 1s ease-out;
+        }
+        h3 {
+            color: #4a7c8c;
+            margin-top: 25px;
+            font-size: 1.5em;
+            animation: fadeInRight 1s ease-out;
+        }
+        p {
+            margin: 10px 0;
+            color: #121111;
+            font-size: 1.0em;
+        }
+        img {
+            max-width: 80%;
+            max-height: 500px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.05);
+            opacity: 0.95;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            color: #555;
+            transition: background-color 0.3s ease;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        td:hover {
+            background-color: #f0f0f0;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        pre:hover {
+            transform: scale(1.02);
+        }
+        .placeholder {
+            color: #888;
+            font-style: italic;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        .placeholder:hover {
+            opacity: 1;
+        }
+        /* Image Containers */
+        .image-container, .two-image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+        }
+        .image-container:hover, .two-image-container:hover {
+            transform: scale(1.02);
+        }
+        .image-container img, .two-image-container img {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            max-width: 30%; /* Fits three images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .two-image-container img {
+            max-width: 48%; /* Fits two images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            max-width: 80%;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        iframe:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1200px) {
+            .section-container { max-width: 95%; padding: 15px; }
+            img, iframe { max-width: 90%; max-height: 400px; }
+            .image-container img, .two-image-container img { max-width: 45%; }
+            table { width: 95%; }
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.6em; }
+            h3 { font-size: 1.3em; }
+        }
+        @media (max-width: 768px) {
+            .section-container { max-width: 90%; padding: 10px; }
+            img, iframe { max-width: 100%; max-height: 250px; }
+            .image-container img, .two-image-container img { max-width: 100%; }
+            table { width: 100%; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.1em; }
+            p { font-size: 1em; }
+        }
+        @media (max-width: 480px) {
+            .section-container { padding: 5px; }
+            img, iframe { max-height: 200px; }
+            pre { font-size: 0.8em; padding: 10px; }
+            table { font-size: 0.9em; }
+            button { padding: 8px 15px; font-size: 0.9em; }
+        }
+    </style>
+    <script>
+        // Smooth scrolling for navigation (if needed, add links later)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Image lazy loading with animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.image-container img, .two-image-container img');
+            images.forEach(img => {
+                img.style.opacity = '0';
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.animation = 'fadeIn 1s ease-out forwards';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '50px' });
+                observer.observe(img);
+            });
+        });
+
+        // Dynamic table toggle for sensor data (not used here, kept for consistency)
+        function toggleTable() {
+            const table = document.querySelector('table');
+            if (table) {
+                if (table.style.display === 'none' || table.style.display === '') {
+                    table.style.display = 'table';
+                    table.style.animation = 'fadeIn 0.5s ease-out';
+                } else {
+                    table.style.animation = 'fadeOut 0.5s ease-out';
+                    setTimeout(() => table.style.display = 'none', 500);
+                }
+            }
+        }
+
+        // Image zoom on click
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('click', function() {
+                this.classList.toggle('enlarged');
+                if (this.classList.contains('enlarged')) {
+                    this.style.maxWidth = '90%';
+                    this.style.maxHeight = '80vh';
+                    this.style.position = 'fixed';
+                    this.style.top = '50%';
+                    this.style.left = '50%';
+                    this.style.transform = 'translate(-50%, -50%)';
+                    this.style.zIndex = '1000';
+                    this.style.cursor = 'zoom-out';
+                } else {
+                    this.style.maxWidth = '80%';
+                    this.style.maxHeight = '500px';
+                    this.style.position = 'static';
+                    this.style.top = 'auto';
+                    this.style.left = 'auto';
+                    this.style.transform = 'none';
+                    this.style.zIndex = 'auto';
+                    this.style.cursor = 'default';
+                }
+            });
+        });
+
+        // Fade animations for sections
+        document.querySelectorAll('h1, h2, h3, p').forEach(element => {
+            element.style.opacity = '0';
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.animation = 'fadeIn 1s ease-out';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(element);
+        });
+
+        // CSS animations for fadeOut
+        const styles = document.createElement('style');
+        styles.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .enlarged {
+                max-width: 90% !important;
+                max-height: 80vh !important;
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 1000 !important;
+                cursor: zoom-out !important;
+            }`;
+        document.head.appendChild(styles);
+    </script>
+    <!-- MathJax for rendering LaTeX equations -->
+    <script>
+        window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+        svg: { fontCache: 'global' }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
-    <h1>Lab 11: Placeholder</h1>
-    <p>This is a placeholder for Lab 11 content.</p>
+    <div class="section-container">
+        <h1>Lab 11: Real-World Localization</h1>
+
+    <h2>Objective</h2> 
+
+    <p> In this lab, my goal was to perform real-world localization using the Bayes Filter’s update step — relying solely on 
+        sensor measurements from the ToF sensor. Unlike previous labs, here I focused entirely on the correction step. I placed the robot at
+         known map locations, performed a 360° sensor sweep, and used that observation to infer the robot’s position on a grid map. </p> <p> I had the robot perform a full in-place 
+        rotation while collecting 18 sensor readings — one every 20 degrees. I then compared these ToF measurements against expected map readings and used them to update the belief 
+        distribution over (x, y, θ) poses.
+     </p>
+
+
+    <h2>Implementation Overview</h2> 
+
+    <p> I extended my <code>RealRobot</code> class to support a 360° observation loop. The robot rotated slowly in place, capturing 18 evenly spaced ToF measurements. 
+        I used these readings to update the belief over the robot’s pose on a discretized map using only the Bayes Filter’s update step. </p> <p> 
+        I implemented a new method called <code>perform_observation_loop()</code>, which sent a <code>DO_MAPPING</code> command over BLE to start the 360° scan.
+        After waiting for the scan to complete, I reshaped and averaged the IMU (yaw) and ToF data into two stable column vectors — one for distances in meters and one for angles in degrees. 
+        These vectors were then passed into the Bayes Filter’s update function. 
+    </p> 
+    
+    <div class="two-image-container"> 
+        <img src="labs_img/mapping_command.png" alt="DO_MAPPING BLE Command Implementation"> 
+        <img src="labs_img/perform_observation_loop.png" alt="perform_observation_loop Code"> 
+    </div> 
+
+    <p> I reused the <code>DO_MAPPING</code> command I had already implemented in lab 10, since it was reliable for triggering 360° scans and collecting sensor values. 
+        I triggered the command via BLE using the same notification handler as previous labs.
+    </p> 
+
+    
+
+    <h2>Observation Loop Behavior</h2> 
+    <p> I wrote the observation loop in <code>perform_observation_loop()</code> inside the <code>RealRobot</code> class. 
+        The robot rotated in place while recording yaw and ToF data every 20°, for a total of 18 observations. 
+    </p> 
+    <p> I passed three parameters to the robot:
+        angular increment (20°), acceptable yaw error (3°), and number of ToF readings per angle (5). I bundled these into a string and sent them using 
+        <code>ble.send_command(CMD.DO_MAPPING, ...)</code>. Once the robot completed its turn, I requested the recorded data using <code>CMD.SEND_SENSOR_DATA</code>. 
+    </p> 
+        
+    <h4>Data Retrieval</h4> 
+    <p> 
+        After retrieving the data, I reshaped the readings using NumPy and averaged them across repeated trials to reduce noise.
+    </p> 
+        <pre><code> imu = run['Yu'] # yaw in degrees 
+ tof = run['D1'] # distance in mm 
+ angle = imu.reshape((self.num_steps, trials)).mean(axis=1)[np.newaxis].T 
+ distance = tof.reshape((self.num_steps, trials)).mean(axis=1)[np.newaxis].T / 1000 # convert mm to meters </code></pre> 
+    <p> 
+        This gave me two output vectors: <strong>sensor_ranges</strong> (distances in meters) and <strong>sensor_bearings</strong> (yaw angles). 
+        I then used <code>sensor_ranges</code> in the Bayes Filter to perform the update. 
+    </p> 
+    
+
+    <h2>Evaluation at Test Poses</h2>
+    <p> I tested localization at the four given grid positions: 
+        <strong>(-3, -2)</strong>, <strong>(0, 3)</strong>, <strong>(5, -3)</strong>, and <strong>(5, 3)</strong>. 
+        At each pose, I triggered a 360° scan and passed the resulting observations into the Bayes Filter. 
+        I then visualized the updated belief distribution to evaluate localization accuracy. 
+    </p> 
+    
+    <div class="two-image-container"> 
+        <img src="labs_img/lab_11_belief(-3,2).png" alt="Belief at (-3,-2)"> 
+        <img src="labs_img/lab_11_belief(0,3).png" alt="Belief at (0,3)"> 
+    </div> 
+    
+    <div class="two-image-container"> 
+        <img src="labs_img/lab_11_belief(5,3).png" alt="Belief at (5,3)"> 
+        <img src="labs_img/lab_11_belief(5,-3).png" alt="Belief at (5,-3)"> 
+    </div> 
+    
+    <h4>Observations</h4> 
+    <p> At <strong>(0, 3)</strong>, I observed a sharply peaked belief centered exactly at the correct pose — the robot localized confidently thanks to clear nearby features. 
+        At <strong>(5, -3)</strong>, the belief was slightly more spread out, suggesting some ambiguity due to environmental symmetry. When testing at <strong>(-3, -2)</strong>, 
+        I saw a tight and confident belief peak, likely due to unique geometry and distinct scan matches. At <strong>(5, 3)</strong>, 
+        the belief was offset slightly, but still concentrated in the right quadrant — showing the robot could localize fairly well even in more ambiguous regions. 
+    </p> 
+    
+    <h2>Conclusion</h2> 
+    
+    <p> This lab showed me that the update step of the Bayes Filter alone is powerful enough to localize a robot using just ToF sensor readings. Even without odometry, 
+        I was able to accurately estimate the robot’s pose in a known map using real-world data. </p> <p> The sensor model worked well at most test locations, and belief 
+        distributions were consistently centered near the true pose. Areas with strong geometric features led to more accurate and confident localization, while more symmetric or 
+        open spaces introduced some uncertainty. Overall, I found this lab to be a great hands-on example of probabilistic localization in action. 
+    </p> 
+    
+    <p> <strong>[1]</strong> I want to thank Stephan Wagner for documenting his workflow in such a clear and structured way — his guide helped me debug and structure my implementation. </p>
+
+    </div>
 </body>
 </html>
