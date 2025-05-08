@@ -3,10 +3,471 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 8 Placeholder</title>
+    <title>Lab 8: Drift Stunt</title>
+</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2.5em;
+            animation: fadeInDown 1s ease-out;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 12px;
+            margin-top: 35px;
+            font-size: 1.8em;
+            animation: fadeInLeft 1s ease-out;
+        }
+        h3 {
+            color: #4a7c8c;
+            margin-top: 25px;
+            font-size: 1.5em;
+            animation: fadeInRight 1s ease-out;
+        }
+        p {
+            margin: 10px 0;
+            color: #121111;
+            font-size: 1.0em;
+        }
+        img {
+            max-width: 80%;
+            max-height: 500px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.05);
+            opacity: 0.95;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            color: #555;
+            transition: background-color 0.3s ease;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        td:hover {
+            background-color: #f0f0f0;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        pre:hover {
+            transform: scale(1.02);
+        }
+        .placeholder {
+            color: #888;
+            font-style: italic;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        .placeholder:hover {
+            opacity: 1;
+        }
+        /* Image Containers */
+        .image-container, .two-image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+        }
+        .image-container:hover, .two-image-container:hover {
+            transform: scale(1.02);
+        }
+        .image-container img, .two-image-container img {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            max-width: 30%; /* Fits three images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .two-image-container img {
+            max-width: 48%; /* Fits two images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            max-width: 80%;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        iframe:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1200px) {
+            .section-container { max-width: 95%; padding: 15px; }
+            img, iframe { max-width: 90%; max-height: 400px; }
+            .image-container img, .two-image-container img { max-width: 45%; }
+            table { width: 95%; }
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.6em; }
+            h3 { font-size: 1.3em; }
+        }
+        @media (max-width: 768px) {
+            .section-container { max-width: 90%; padding: 10px; }
+            img, iframe { max-width: 100%; max-height: 250px; }
+            .image-container img, .two-image-container img { max-width: 100%; }
+            table { width: 100%; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.1em; }
+            p { font-size: 1em; }
+        }
+        @media (max-width: 480px) {
+            .section-container { padding: 5px; }
+            img, iframe { max-height: 200px; }
+            pre { font-size: 0.8em; padding: 10px; }
+            table { font-size: 0.9em; }
+            button { padding: 8px 15px; font-size: 0.9em; }
+        }
+    </style>
+    <script>
+        // Smooth scrolling for navigation (if needed, add links later)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Image lazy loading with animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.image-container img, .two-image-container img');
+            images.forEach(img => {
+                img.style.opacity = '0';
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.animation = 'fadeIn 1s ease-out forwards';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '50px' });
+                observer.observe(img);
+            });
+        });
+
+        // Dynamic table toggle for sensor data (not used here, kept for consistency)
+        function toggleTable() {
+            const table = document.querySelector('table');
+            if (table) {
+                if (table.style.display === 'none' || table.style.display === '') {
+                    table.style.display = 'table';
+                    table.style.animation = 'fadeIn 0.5s ease-out';
+                } else {
+                    table.style.animation = 'fadeOut 0.5s ease-out';
+                    setTimeout(() => table.style.display = 'none', 500);
+                }
+            }
+        }
+
+        // Image zoom on click
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('click', function() {
+                this.classList.toggle('enlarged');
+                if (this.classList.contains('enlarged')) {
+                    this.style.maxWidth = '90%';
+                    this.style.maxHeight = '80vh';
+                    this.style.position = 'fixed';
+                    this.style.top = '50%';
+                    this.style.left = '50%';
+                    this.style.transform = 'translate(-50%, -50%)';
+                    this.style.zIndex = '1000';
+                    this.style.cursor = 'zoom-out';
+                } else {
+                    this.style.maxWidth = '80%';
+                    this.style.maxHeight = '500px';
+                    this.style.position = 'static';
+                    this.style.top = 'auto';
+                    this.style.left = 'auto';
+                    this.style.transform = 'none';
+                    this.style.zIndex = 'auto';
+                    this.style.cursor = 'default';
+                }
+            });
+        });
+
+        // Fade animations for sections
+        document.querySelectorAll('h1, h2, h3, p').forEach(element => {
+            element.style.opacity = '0';
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.animation = 'fadeIn 1s ease-out';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(element);
+        });
+
+        // CSS animations for fadeOut
+        const styles = document.createElement('style');
+        styles.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .enlarged {
+                max-width: 90% !important;
+                max-height: 80vh !important;
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 1000 !important;
+                cursor: zoom-out !important;
+            }`;
+        document.head.appendChild(styles);
+    </script>
+    <!-- MathJax for rendering LaTeX equations -->
+    <script>
+        window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+        svg: { fontCache: 'global' }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
-    <h1>Lab 8: Placeholder</h1>
-    <p>This is a placeholder for Lab 8 content. I paused this lab due to my robot getting destroyed while doing flips. Needed to replace my ToF and redo some wiring. </p>
+    <div class="section-container">
+        <h1>Lab 8: Drift Stunt </h1>
+
+        <h2>Overview</h2>
+        <p>
+            The objective of Lab 8 was to execute a high-speed robotic stunt, demonstrating the integration of sensing, control, and actuation pipelines. I chose to implement the “Drift” stunt, which required the robot to accelerate toward a wall, detect proximity, perform a 180° spin, and return in the opposite direction. Although my initial implementation used an open-loop timing-based spin, I adapted the control structure from my Lab 6 PID yaw controller to simulate closed-loop behavior. The robot used the ToF sensor to trigger the spin at a fixed threshold and followed a time-calibrated turn to emulate yaw setpoint convergence.
+        </p>
+    
+
+
+        <h2>Control Logic and Integration</h2>
+
+        <h4>Open-Loop Drift Stunt</h4>
+        <p>
+            I began implementing the drift stunt using a simple open-loop strategy. I added a custom BLE command, <code>START_DRIFT</code>, that triggered the robot to drive forward at high PWM. 
+            Once the ToF sensor measured a distance below a threshold of <strong>914 mm</strong> (roughly 3 tiles from the wall), the robot executed a timed in-place spin. 
+            I achieved this by driving one motor forward and the other in reverse for a calibrated delay of approximately 210–250 ms — enough to rotate the robot close to 180°.
+        </p>
+        
+        <p>
+            The spin logic was implemented in my <code>perform_drift_spin()</code> function, where I set the left motor to run backward and the right motor forward. 
+            After the spin, I commanded the robot to continue driving straight for a fixed amount of time before stopping using a <code>stop()</code> call. 
+            This approach made the stunt fully open-loop but reliable and repeatable, as it relied only on timing and a single ToF threshold trigger.
+        </p>
+        
+        <p>
+            To manage this sequence cleanly, I introduced two key state flags in my code:
+            <ul>
+                <li><code>is_drift</code> – A boolean flag that indicated when the robot was in drift mode after the <code>START_DRIFT</code> command was received.</li>
+                <li><code>drift_triggered</code> – Another flag that prevented the robot from re-triggering the spin logic multiple times after the initial threshold crossing.</li>
+            </ul>
+            I checked these flags inside the <code>loop()</code> function while connected to BLE, which helped me modularize the drift behavior and avoid unwanted repeated spins.
+        </p>
+        
+        <p>
+            During the drift, I logged time, PWM values, and ToF distances into arrays using <code>log_drift_data()</code>. 
+            This data could then be retrieved using my <code>COLLECT_DATA</code> BLE command, just like in previous labs. 
+            I reused the same Python notification handler to receive the logs and visualize the data for debugging and validation.
+        </p>
+        
+        <div class="two-image-container">
+            <img src="labs_img/drift_command.png" alt="BLE Command and Flag Handling">
+            <img src="labs_img/perform_drfit.png" alt="perform_drift_spin() Implementation">
+        </div>
+        
+
+        <h4>Closed-Loop Drift Stunt</h4>
+
+        <p>
+            While my open-loop implementation was repeatable and functional, it lacked adaptability to changes in surface friction, battery level, or wheel slippage. 
+            To improve it and bring the stunt closer to the lab's closed-loop expectations, I leveraged my <strong>Lab 6 PID yaw controller</strong>, which was 
+            built around the IMU's onboard Digital Motion Processor (DMP).
+        </p>
+        
+        <p>
+            I configured my IMU to output Euler angles. The <code>record_dmp_data()</code> function then gave me stable  high-rate yaw readings that I could use as feedback for angular control.
+        </p>
+
+        <div class="two-image-container">   
+            <img src="labs_img/dmp_setup_code.png" alt="DMP Yaw Output Setup">
+        </div>
+                 
+        <p>
+            For the closed-loop version of the drift, I replaced the fixed spin delay with a feedback loop that continuously check the yaw, compute the yaw error relative to a 180° setpoint, and apply a PID controller to update the motor commands until the yaw error converges. 
+            This structure mirrors my <code>run_yaw_pid_sequence()</code> from Lab 6, where I achieved smooth heading correction using tuned PID gains.
+        </p>
+  
+        <div class="two-image-container">
+            <img src="labs_img/pid_controller_9.png" alt="PID Yaw Control Loop from Lab 6">
+        </div>
+        <h4>BLE Command Structure & Data Logging</h4>
+
+        <p>
+            For control and debugging, I continued to build on the BLE command infrastructure I developed in earlier labs. 
+            I added a new command called <code>START_DRIFT</code>, which initiated the open-loop stunt sequence when received. 
+            This command set the <code>is_drift</code> flag to true and started the robot’s forward motion. 
+            The main <code>loop()</code> then continuously checked whether the ToF sensor reading dropped below the threshold, and if so, triggered the <code>perform_drift_spin()</code> function.
+        </p>
+
+        <div class="two-image-container">
+            <img src="labs_img/ble_start_drift.png" alt="BLE START_DRIFT Command">
+        </div>
+        <p>
+            To verify behavior and analyze performance after each run, I implemented a logging system using arrays to store time, PWM value, and ToF distance. 
+            I reused my <code>log_drift_data()</code> function to collect this data, and created a <code>COLLECT_DATA</code> BLE command that streamed the log back to my Python script via the same notification handler I used in Labs 5 and 6.
+        </p>
+
+        <p>
+            This allowed me to plot the robot's approach to the wall and validate that the trigger point occurred around the expected 914 mm mark. 
+            It also made it easy to tune the spin delay value by correlating ToF readings with the rotation behavior captured in the logs.
+        </p>
+
+        <div class="two-image-container">
+            <img src="labs_img/collect_data_ble_lab8.png" alt="COLLECT_DATA Command and Python Notification Handler">
+        </div>
+       
+        <h4>Results & Analysis</h4>
+
+        <p>
+            After tuning the spin delay and forward PWM values, I was able to reliably trigger a 180° drift stunt near the wall. The robot would approach the wall at high speed, spin in place, and drive away cleanly. 
+        </p>
+        
+        <p>
+            I also captured a blooper moment where the robot turned too early and ended up drifting off to the side. 
+            These types of failures typically occurred when surface friction or wheel slip caused the robot to rotate more or less than expected — a natural limitation of open-loop control.
+        </p>
+        
+        <p>
+            Although I implemented BLE-based logging and streamed back ToF and PWM values during runs, I ultimately decided not to include plots in this write-up. 
+            The raw logs were consistent with expectations, but the videos themselves did a better job demonstrating failure and success modes.
+        </p>
+        
+        
+        <div class="two-image-container">
+            <div style="text-align: center;">
+              <iframe width="480" height="270" src="https://www.youtube.com/embed/3Ce2AvOAU0s" 
+                      title="Drift Blooper" frameborder="0" allowfullscreen></iframe>
+              <p style="font-style: italic; color: #555; margin-top: 8px;">Drift Blooper with low pwm </p>
+            </div>
+          
+            <div style="text-align: center;">
+              <iframe width="480" height="270" src="https://www.youtube.com/embed/TpejXmUhToo" 
+                      title="Bayes Filter Run 2" frameborder="0" allowfullscreen></iframe>
+              <p style="font-style: italic; color: #555; margin-top: 8px;">Successful Drift Stunt</p>
+            </div>
+          </div>
+        <h4>Conclusion</h4>
+
+        <p>
+            This lab brought together nearly every system I built throughout the semester — from BLE command handling and ToF sensing to motor control and PID feedback logic. 
+            I started with a simple open-loop approach to executing the drift stunt and was able to reliably perform a 180° spin near a wall using timed motor commands and sensor-triggered logic.
+        </p>
+        
+        <p>
+            To align with the closed-loop goals of the course, I drew on my Lab 6 PID yaw controller and integrated the IMU’s DMP-based yaw feedback pipeline into the stunt logic. 
+        </p>
+        
+        <p>
+            <strong>[1]</strong> Huge thanks to Stephan Wagner (2024) for his inspiration and helpful documentation throughout this process.
+        </p>
+    </div>
 </body>
 </html>
