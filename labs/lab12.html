@@ -3,10 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lab 12 Placeholder</title>
+    <title>Lab 12: Path Planning and Execution</title>
+</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+            color: #333;
+        }
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .section-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 2.5em;
+            animation: fadeInDown 1s ease-out;
+        }
+        h2 {
+            color: #34495e;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 12px;
+            margin-top: 35px;
+            font-size: 1.8em;
+            animation: fadeInLeft 1s ease-out;
+        }
+        h3 {
+            color: #4a7c8c;
+            margin-top: 25px;
+            font-size: 1.5em;
+            animation: fadeInRight 1s ease-out;
+        }
+        p {
+            margin: 10px 0;
+            color: #121111;
+            font-size: 1.0em;
+        }
+        img {
+            max-width: 80%;
+            max-height: 500px;
+            height: auto;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.05);
+            opacity: 0.95;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        table {
+            border-collapse: collapse;
+            width: 90%;
+            margin: 20px auto;
+            background-color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            color: #555;
+            transition: background-color 0.3s ease;
+        }
+        th {
+            background-color: #3498db;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        td:hover {
+            background-color: #f0f0f0;
+        }
+        pre {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+            color: #333;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        pre:hover {
+            transform: scale(1.02);
+        }
+        .placeholder {
+            color: #888;
+            font-style: italic;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        .placeholder:hover {
+            opacity: 1;
+        }
+        /* Image Containers */
+        .image-container, .two-image-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 10px 0;
+            transition: opacity 0.5s ease, transform 0.3s ease;
+        }
+        .image-container:hover, .two-image-container:hover {
+            transform: scale(1.02);
+        }
+        .image-container img, .two-image-container img {
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
+            max-width: 30%; /* Fits three images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .two-image-container img {
+            max-width: 48%; /* Fits two images side by side */
+            max-height: 600px;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        iframe {
+            max-width: 80%;
+            display: block;
+            margin: 10px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        iframe:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 1200px) {
+            .section-container { max-width: 95%; padding: 15px; }
+            img, iframe { max-width: 90%; max-height: 400px; }
+            .image-container img, .two-image-container img { max-width: 45%; }
+            table { width: 95%; }
+            h1 { font-size: 2.2em; }
+            h2 { font-size: 1.6em; }
+            h3 { font-size: 1.3em; }
+        }
+        @media (max-width: 768px) {
+            .section-container { max-width: 90%; padding: 10px; }
+            img, iframe { max-width: 100%; max-height: 250px; }
+            .image-container img, .two-image-container img { max-width: 100%; }
+            table { width: 100%; }
+            h1 { font-size: 1.8em; }
+            h2 { font-size: 1.4em; }
+            h3 { font-size: 1.1em; }
+            p { font-size: 1em; }
+        }
+        @media (max-width: 480px) {
+            .section-container { padding: 5px; }
+            img, iframe { max-height: 200px; }
+            pre { font-size: 0.8em; padding: 10px; }
+            table { font-size: 0.9em; }
+            button { padding: 8px 15px; font-size: 0.9em; }
+        }
+    </style>
+    <script>
+        // Smooth scrolling for navigation (if needed, add links later)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Image lazy loading with animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.image-container img, .two-image-container img');
+            images.forEach(img => {
+                img.style.opacity = '0';
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.style.opacity = '1';
+                            entry.target.style.animation = 'fadeIn 1s ease-out forwards';
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '50px' });
+                observer.observe(img);
+            });
+        });
+
+        // Dynamic table toggle for sensor data (not used here, kept for consistency)
+        function toggleTable() {
+            const table = document.querySelector('table');
+            if (table) {
+                if (table.style.display === 'none' || table.style.display === '') {
+                    table.style.display = 'table';
+                    table.style.animation = 'fadeIn 0.5s ease-out';
+                } else {
+                    table.style.animation = 'fadeOut 0.5s ease-out';
+                    setTimeout(() => table.style.display = 'none', 500);
+                }
+            }
+        }
+
+        // Image zoom on click
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('click', function() {
+                this.classList.toggle('enlarged');
+                if (this.classList.contains('enlarged')) {
+                    this.style.maxWidth = '90%';
+                    this.style.maxHeight = '80vh';
+                    this.style.position = 'fixed';
+                    this.style.top = '50%';
+                    this.style.left = '50%';
+                    this.style.transform = 'translate(-50%, -50%)';
+                    this.style.zIndex = '1000';
+                    this.style.cursor = 'zoom-out';
+                } else {
+                    this.style.maxWidth = '80%';
+                    this.style.maxHeight = '500px';
+                    this.style.position = 'static';
+                    this.style.top = 'auto';
+                    this.style.left = 'auto';
+                    this.style.transform = 'none';
+                    this.style.zIndex = 'auto';
+                    this.style.cursor = 'default';
+                }
+            });
+        });
+
+        // Fade animations for sections
+        document.querySelectorAll('h1, h2, h3, p').forEach(element => {
+            element.style.opacity = '0';
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.animation = 'fadeIn 1s ease-out';
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+            observer.observe(element);
+        });
+
+        // CSS animations for fadeOut
+        const styles = document.createElement('style');
+        styles.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            .enlarged {
+                max-width: 90% !important;
+                max-height: 80vh !important;
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                z-index: 1000 !important;
+                cursor: zoom-out !important;
+            }`;
+        document.head.appendChild(styles);
+    </script>
+    <!-- MathJax for rendering LaTeX equations -->
+    <script>
+        window.MathJax = {
+        tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+        svg: { fontCache: 'global' }
+        };
+    </script>
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
-    <h1>Lab 12: Placeholder</h1>
-    <p>This is a placeholder for Lab 12 content.</p>
+    <div class="section-container">
+        <h1>Lab 12: Path Planning and Execution</h1>
+
+    <h2>Objective</h2>
+    <p>
+        So far we have worked and implemented open and closed loop control on our robot, performed an amazing stunt in lab 6. Now this lab served as 
+        the last lab of the semester, the last piece is now have the robot navigate through  a set of waypoints in a boxed environment
+        as quickly and accurately as possible.
+    </p>
+
+
 </body>
 </html>
+
+
